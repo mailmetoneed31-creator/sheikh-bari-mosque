@@ -1,0 +1,2865 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>শেখ বাড়ি জামে মসজিদ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════
+   ROOT VARIABLES & RESET
+═══════════════════════════════════════════ */
+:root {
+  --g1: #0d2218;
+  --g2: #1a3a2a;
+  --g3: #2d5a3d;
+  --g4: #3d7a52;
+  --gold: #c9a84c;
+  --gold2: #e8c86a;
+  --cream: #fdf8f0;
+  --cream2: #f0e8d5;
+  --white: #ffffff;
+  --txt: #1c1c1c;
+  --txt2: #4a4a4a;
+  --shadow-lg: 0 20px 60px rgba(13,34,24,0.15);
+  --shadow-md: 0 8px 30px rgba(13,34,24,0.12);
+  --shadow-sm: 0 4px 15px rgba(13,34,24,0.08);
+  --radius: 16px;
+  --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Noto Serif Bengali', serif;
+  background: var(--cream);
+  color: var(--txt);
+  overflow-x: hidden;
+}
+
+/* Islamic Geometric Pattern */
+.geo-bg {
+  background-color: var(--g2);
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a84c' fill-opacity='0.07'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════ */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 68px;
+  background: rgba(13,34,24,0.98);
+  backdrop-filter: blur(15px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 999;
+  border-bottom: 1px solid rgba(201,168,76,0.25);
+  box-shadow: 0 4px 40px rgba(0,0,0,0.4);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-logo {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--g1);
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+}
+
+.nav-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nav-title {
+  font-family: 'Amiri', serif;
+  color: var(--gold2);
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+.nav-title small {
+  display: block;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.68rem;
+  color: rgba(232,200,106,0.75);
+  font-weight: 400;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.82rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  transition: var(--transition);
+  font-family: 'Noto Serif Bengali', serif;
+}
+.nav-links a:hover {
+  color: var(--gold2);
+  background: rgba(201,168,76,0.15);
+}
+
+.nav-admin-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--g1) !important;
+  font-weight: 700 !important;
+  padding: 0.4rem 1rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(201,168,76,0.25);
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--gold2);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 68px; left: 0; right: 0;
+  background: var(--g1);
+  padding: 1rem;
+  z-index: 998;
+  border-bottom: 2px solid var(--gold);
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+.mobile-nav a:hover { background: rgba(201,168,76,0.15); color: var(--gold2); }
+
+.admin-only {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════
+   HERO SECTION
+═══════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 100px 1.5rem 4rem;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--g1) 0%, var(--g2) 40%, #1e4d30 70%, var(--g1) 100%);
+  z-index: 0;
+}
+
+.hero-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c9a84c' fill-rule='evenodd'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+.hero-arabic {
+  font-family: 'Amiri', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: var(--gold2);
+  line-height: 1.3;
+  margin-bottom: 0.3rem;
+  animation: fadeDown 0.8s ease both;
+  text-shadow: 0 4px 20px rgba(201,168,76,0.4);
+  letter-spacing: 3px;
+}
+
+.hero-title {
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  color: var(--white);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  animation: fadeDown 0.8s 0.15s ease both;
+}
+
+.hero-sub {
+  color: rgba(255,255,255,0.7);
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  margin-bottom: 2.5rem;
+  animation: fadeDown 0.8s 0.25s ease both;
+  line-height: 1.6;
+}
+
+.hero-prayer-strip {
+  background: rgba(201,168,76,0.12);
+  border: 1.5px solid rgba(201,168,76,0.35);
+  border-radius: 60px;
+  padding: 0.9rem 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  animation: fadeDown 0.8s 0.35s ease both;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(201,168,76,0.1);
+}
+
+.hero-prayer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-prayer-item .label {
+  color: rgba(232,200,106,0.75);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+.hero-prayer-item .time {
+  color: var(--gold2);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 2px;
+  font-family: 'Amiri', serif;
+}
+.hero-divider { width: 1px; height: 30px; background: rgba(201,168,76,0.3); }
+
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeDown 0.8s 0.45s ease both;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--g1);
+  border: none;
+  padding: 0.85rem 2.2rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 6px 20px rgba(201,168,76,0.3);
+}
+.btn-primary:hover { 
+  transform: translateY(-3px);
+  box-shadow: 0 10px 35px rgba(201,168,76,0.5); 
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--gold2);
+  border: 1.5px solid rgba(201,168,76,0.6);
+  padding: 0.85rem 2.2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-outline:hover { 
+  border-color: var(--gold2);
+  background: rgba(201,168,76,0.12);
+  transform: translateY(-2px);
+}
+
+.scroll-ind {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(201,168,76,0.6);
+  font-size: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION COMMON STYLES
+═══════════════════════════════════════════ */
+section { padding: 5rem 1.5rem; }
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+.section-header { text-align: center; margin-bottom: 3.5rem; }
+
+.section-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.25));
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--gold);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 1.2rem;
+  border-radius: 30px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.section-title {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--g2);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.section-title.light { color: var(--gold2); }
+
+.section-line {
+  width: 70px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  margin: 1rem auto 0;
+  border-radius: 2px;
+  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+}
+
+.section-desc {
+  color: var(--txt2);
+  font-size: 0.95rem;
+  max-width: 550px;
+  margin: 1rem auto 0;
+  line-height: 1.75;
+}
+.section-desc.light { color: rgba(255,255,255,0.7); }
+
+/* ═══════════════════════════════════════════
+   PRAYER TIMES SECTION
+═══════════════════════════════════════════ */
+#prayer { background: var(--cream); }
+
+.prayer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
+}
+
+.prayer-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 2rem 1.2rem;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(201,168,76,0.15);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.prayer-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: var(--transition);
+}
+
+.prayer-card:hover::before { transform: scaleX(1); }
+.prayer-card:hover { 
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.prayer-card.active {
+  background: linear-gradient(135deg, var(--g2), var(--g3));
+  border-color: var(--gold);
+}
+.prayer-card.active::before { transform: scaleX(1); }
+
+.prayer-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.prayer-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--g2);
+  margin-bottom: 0.2rem;
+}
+.prayer-card.active .prayer-name { color: var(--gold2); }
+
+.prayer-name-bn {
+  font-size: 0.8rem;
+  color: var(--txt2);
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+.prayer-card.active .prayer-name-bn { color: rgba(255,255,255,0.6); }
+
+.prayer-time {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: 'Amiri', serif;
+  letter-spacing: 1px;
+  margin-bottom: 0.3rem;
+}
+.prayer-card.active .prayer-time { color: var(--gold2); }
+
+.prayer-iqama {
+  font-size: 0.78rem;
+  color: var(--txt2);
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+.prayer-card.active .prayer-iqama { color: rgba(255,255,255,0.55); }
+
+.jummah-banner {
+  margin-top: 2.5rem;
+  background: linear-gradient(135deg, var(--g2), var(--g3));
+  border-radius: var(--radius);
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  border: 1px solid rgba(201,168,76,0.3);
+  box-shadow: var(--shadow-md);
+}
+
+.jummah-icon {
+  width: 70px;
+  height: 70px;
+  background: rgba(201,168,76,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  border: 2px solid rgba(201,168,76,0.3);
+}
+
+.jummah-info h3 {
+  color: var(--gold2);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.jummah-info p { color: rgba(255,255,255,0.75); font-size: 0.9rem; line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   COUNTDOWN TIMER
+═══════════════════════════════════════════ */
+.countdown-container {
+  background: rgba(13, 34, 24, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(201, 168, 76, 0.5);
+  border-radius: 60px;
+  padding: 1.2rem 2.8rem;
+  margin: 2rem auto 2.5rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.15);
+  animation: fadeDown 0.8s 0.4s ease both;
+}
+
+.countdown-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.countdown-label i {
+  color: var(--gold2);
+  font-size: 1.1rem;
+}
+
+.countdown-timer {
+  font-family: 'Amiri', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--gold2);
+  line-height: 1.2;
+  letter-spacing: 5px;
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.6);
+}
+
+.countdown-jamaat {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.85rem;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════
+   NOTICE BOARD
+═══════════════════════════════════════════ */
+#notices {
+  background: var(--cream2);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%232d5a3d' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.notice-list { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.notice-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--gold);
+  transition: var(--transition);
+  animation: fadeIn 0.5s ease both;
+}
+.notice-card:hover { 
+  transform: translateX(6px);
+  box-shadow: var(--shadow-md);
+}
+
+.notice-date-box {
+  background: linear-gradient(135deg, var(--g2), var(--g3));
+  color: var(--white);
+  padding: 0.8rem 1.1rem;
+  border-radius: 12px;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 60px;
+  box-shadow: var(--shadow-sm);
+}
+.notice-date-box .day { font-size: 1.4rem; font-weight: 700; line-height: 1; }
+.notice-date-box .month { font-size: 0.7rem; color: var(--gold2); text-transform: uppercase; margin-top: 3px; }
+
+.notice-body h3 { font-size: 1.05rem; font-weight: 700; color: var(--g2); margin-bottom: 0.3rem; }
+.notice-body p { font-size: 0.88rem; color: var(--txt2); line-height: 1.7; }
+
+.notice-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.7rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 0.5rem;
+}
+.badge-urgent { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6c6; }
+.badge-info { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+.badge-general { background: rgba(45,90,61,0.1); color: var(--g3); border: 1px solid rgba(45,90,61,0.2); }
+
+/* ═══════════════════════════════════════════
+   EVENTS SECTION
+═══════════════════════════════════════════ */
+#events { background: var(--cream); }
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.8rem;
+}
+
+.event-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  border: 1px solid rgba(201,168,76,0.12);
+}
+.event-card:hover { 
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.event-header {
+  background: linear-gradient(135deg, var(--g2), var(--g3));
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.event-date-tag {
+  color: var(--gold2);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.event-type {
+  background: rgba(201,168,76,0.2);
+  color: var(--gold2);
+  font-size: 0.7rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.event-body { padding: 1.5rem; }
+.event-body h3 { font-size: 1.1rem; font-weight: 700; color: var(--g2); margin-bottom: 0.6rem; }
+.event-body p { font-size: 0.88rem; color: var(--txt2); line-height: 1.7; }
+
+.event-meta {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--txt2);
+  border-top: 1px solid var(--cream2);
+  flex-wrap: wrap;
+}
+.event-meta span { display: flex; align-items: center; gap: 0.4rem; }
+.event-meta i { color: var(--gold); font-size: 0.85rem; }
+
+/* ═══════════════════════════════════════════
+   COMMITTEE SECTION - IMPROVED
+═══════════════════════════════════════════ */
+#committee { 
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  position: relative;
+  overflow: hidden;
+}
+#committee::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a84c' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.committee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.member-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: var(--transition);
+  overflow: hidden;
+  position: relative;
+}
+
+.member-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: var(--transition);
+}
+
+.member-card:hover {
+  background: rgba(201,168,76,0.08);
+  border-color: rgba(201,168,76,0.45);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 40px rgba(201,168,76,0.15);
+}
+
+.member-card:hover::before {
+  transform: scaleX(1);
+}
+
+.member-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 1.2rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 3px solid rgba(201,168,76,0.4);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, var(--g3), var(--g4));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold2);
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Amiri', serif;
+}
+
+.member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-avatar.placeholder {
+  background: linear-gradient(135deg, var(--g3), var(--g4));
+  color: var(--gold2);
+  font-size: 2.8rem;
+}
+
+.member-role {
+  display: inline-block;
+  background: rgba(201,168,76,0.18);
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(201,168,76,0.3);
+}
+
+.member-name {
+  color: var(--white);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  font-family: 'Noto Serif Bengali', serif;
+}
+
+.member-phone {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-weight: 500;
+}
+.member-phone i { 
+  color: var(--gold2);
+  font-size: 0.8rem;
+}
+
+/* ═══════════════════════════════════════════
+   GALLERY SECTION
+═══════════════════════════════════════════ */
+#gallery { background: var(--cream2); }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: var(--g3);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition);
+}
+.gallery-item:hover img { 
+  transform: scale(1.08);
+  filter: brightness(0.9);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(13,34,24,0.9) 0%, transparent 70%);
+  opacity: 0;
+  transition: var(--transition);
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem;
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay span { color: var(--gold2); font-size: 0.9rem; font-weight: 600; }
+
+.gallery-placeholder {
+  background: linear-gradient(135deg, var(--g2), var(--g3));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  font-size: 2.8rem;
+}
+.gallery-placeholder span {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.gallery-item.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--g2);
+  color: rgba(255,255,255,0.5);
+}
+.gallery-item.image-error i { font-size: 2.8rem; }
+
+/* ═══════════════════════════════════════════
+   DONATION SECTION
+═══════════════════════════════════════════ */
+#donate {
+  background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 50%, #1a2e24 100%);
+  position: relative;
+  overflow: hidden;
+}
+#donate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a84c' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.donate-inner {
+  position: relative;
+  max-width: 950px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.donate-info h2 {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  color: var(--gold2);
+  margin-bottom: 1.2rem;
+  line-height: 1.4;
+}
+.donate-info p {
+  color: rgba(255,255,255,0.75);
+  line-height: 1.8;
+  font-size: 0.95rem;
+  margin-bottom: 1.8rem;
+}
+
+.bank-info {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+.bank-info h4 { color: var(--gold); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; font-weight: 700; }
+.bank-row { display: flex; justify-content: space-between; margin-bottom: 0.7rem; font-size: 0.88rem; }
+.bank-row .lbl { color: rgba(255,255,255,0.5); }
+.bank-row .val { color: var(--white); font-weight: 600; }
+
+.donate-form-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: var(--radius);
+  padding: 2.2rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.donate-form-card h3 {
+  color: var(--gold2);
+  font-size: 1.15rem;
+  margin-bottom: 1.8rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.form-group { margin-bottom: 1.1rem; }
+.form-group label {
+  display: block;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.83rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 11px;
+  padding: 0.8rem 1.1rem;
+  color: var(--white);
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+}
+.form-input:focus { 
+  border-color: rgba(201,168,76,0.6);
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 15px rgba(201,168,76,0.2);
+}
+.form-input::placeholder { color: rgba(255,255,255,0.3); }
+
+.amount-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+.amount-btn {
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.25);
+  color: var(--gold2);
+  padding: 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.amount-btn:hover, .amount-btn.selected {
+  background: rgba(201,168,76,0.3);
+  border-color: var(--gold);
+  transform: scale(1.05);
+}
+
+.public-audit-summary {
+  margin-top: 2rem;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 14px;
+  padding: 1.5rem;
+  backdrop-filter: blur(5px);
+}
+
+.public-audit-summary h4 {
+  color: var(--gold);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.audit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px dashed rgba(255,255,255,0.1);
+}
+.audit-row:last-of-type {
+  border-bottom: none;
+}
+.audit-row.balance {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(201,168,76,0.25);
+  border-bottom: none;
+  font-weight: 600;
+}
+
+.audit-label {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.92rem;
+}
+
+.audit-value {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--white);
+  font-family: 'Amiri', serif;
+}
+.audit-value.income { color: #2ecc71; }
+.audit-value.expense { color: #e74c3c; }
+
+.audit-footer {
+  margin-top: 1rem;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.35);
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  background: var(--g1);
+  color: rgba(255,255,255,0.65);
+  padding: 3.5rem 1.5rem 1.5rem;
+  border-top: 1px solid rgba(201,168,76,0.25);
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-brand .logo-text {
+  font-family: 'Amiri', serif;
+  color: var(--gold2);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.footer-brand p { font-size: 0.87rem; line-height: 1.8; max-width: 280px; color: rgba(255,255,255,0.65); }
+
+.footer-col h4 {
+  color: var(--gold);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+}
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 0.6rem; }
+.footer-col ul li a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 0.87rem;
+  transition: var(--transition);
+  font-weight: 500;
+}
+.footer-col ul li a:hover { color: var(--gold2); padding-left: 4px; }
+.footer-col address { font-style: normal; font-size: 0.87rem; line-height: 1.9; color: rgba(255,255,255,0.65); }
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 2rem auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: rgba(255,255,255,0.5);
+}
+.footer-bottom a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+/* ═══════════════════════════════════════════
+   ADMIN PANEL
+═══════════════════════════════════════════ */
+.admin-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--g1);
+  z-index: 9999;
+  display: none;
+  overflow-y: auto;
+}
+.admin-overlay.open { display: block; }
+
+.admin-nav {
+  background: linear-gradient(90deg, var(--g2), var(--g3));
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.admin-title { 
+  color: var(--gold2);
+  font-weight: 700;
+  font-size: 1.15rem;
+  font-family: 'Noto Serif Bengali', serif;
+}
+.admin-close-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.83rem;
+  transition: var(--transition);
+  font-weight: 600;
+}
+.admin-close-btn:hover { 
+  background: rgba(255,0,0,0.12);
+  border-color: rgba(255,0,0,0.25);
+  color: #ff6b6b;
+}
+
+.admin-content { 
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+  padding-bottom: 1rem;
+}
+.admin-tab {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.85rem;
+  transition: var(--transition);
+  font-weight: 600;
+}
+.admin-tab.active {
+  background: rgba(201,168,76,0.18);
+  border-color: rgba(201,168,76,0.5);
+  color: var(--gold2);
+  box-shadow: 0 4px 15px rgba(201,168,76,0.15);
+}
+.admin-tab-content { display: none; }
+.admin-tab-content.active { display: block; }
+
+.admin-form-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.admin-form-card h3 { 
+  color: var(--gold);
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 1.3rem;
+  font-weight: 700;
+  font-family: 'Noto Serif Bengali', serif;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+.admin-input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  color: var(--white);
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: var(--transition);
+  margin-bottom: 0.9rem;
+}
+.admin-input:focus { 
+  border-color: rgba(201,168,76,0.5);
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 12px rgba(201,168,76,0.15);
+}
+.admin-input::placeholder { color: rgba(255,255,255,0.25); }
+textarea.admin-input { resize: vertical; min-height: 90px; }
+
+.admin-save-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--g1);
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+}
+.admin-save-btn:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(201,168,76,0.4);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+.admin-table th {
+  text-align: left;
+  color: rgba(255,255,255,0.45);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.8rem 1rem;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+  font-weight: 700;
+  background: rgba(255,255,255,0.02);
+}
+.admin-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.78);
+  vertical-align: middle;
+}
+.admin-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+.del-btn {
+  background: rgba(231,76,60,0.15);
+  border: 1px solid rgba(231,76,60,0.25);
+  color: #ff6b6b;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: 'Noto Serif Bengali', serif;
+  transition: var(--transition);
+  font-weight: 600;
+}
+.del-btn:hover { 
+  background: rgba(231,76,60,0.3);
+  border-color: rgba(231,76,60,0.45);
+  transform: scale(1.05);
+}
+
+.audit-summary {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+.summary-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 1.5rem;
+  border: 1px solid rgba(201,168,76,0.25);
+  text-align: center;
+  transition: var(--transition);
+}
+.summary-card:hover {
+  border-color: rgba(201,168,76,0.45);
+  background: rgba(255,255,255,0.08);
+}
+.summary-card .label { 
+  color: rgba(255,255,255,0.6);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+.summary-card .value { 
+  color: var(--gold2);
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  font-family: 'Amiri', serif;
+}
+.summary-card.income .value { color: #2ecc71; }
+.summary-card.expense .value { color: #e74c3c; }
+
+/* ═══════════════════════════════════════════
+   LOGIN MODAL
+═══════════════════════════════════════════ */
+.login-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.login-modal.open { display: flex; }
+
+.login-card {
+  background: linear-gradient(135deg, var(--g2), var(--g3));
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 20px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.login-logo {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--g1);
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 8px 25px rgba(201,168,76,0.35);
+}
+
+.login-card h2 { 
+  color: var(--gold2);
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+  font-family: 'Noto Serif Bengali', serif;
+}
+.login-card p { 
+  color: rgba(255,255,255,0.6);
+  font-size: 0.83rem;
+  margin-bottom: 1.8rem;
+}
+
+.login-input {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 11px;
+  padding: 0.85rem 1.1rem;
+  color: var(--white);
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.9rem;
+  outline: none;
+  margin-bottom: 0.9rem;
+  transition: var(--transition);
+}
+.login-input:focus { 
+  border-color: rgba(201,168,76,0.5);
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 15px rgba(201,168,76,0.2);
+}
+.login-input::placeholder { color: rgba(255,255,255,0.3); }
+
+.login-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--g1);
+  border: none;
+  padding: 0.9rem;
+  border-radius: 11px;
+  font-weight: 700;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 0.8rem;
+  box-shadow: 0 6px 20px rgba(201,168,76,0.3);
+}
+.login-btn:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.45);
+}
+
+.login-cancel {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.83rem;
+  cursor: pointer;
+  transition: var(--transition);
+  background: none;
+  border: none;
+  font-family: 'Noto Serif Bengali', serif;
+  font-weight: 500;
+}
+.login-cancel:hover { color: rgba(255,255,255,0.8); }
+
+.login-error { 
+  color: #ff6b6b;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+  min-height: 1.2rem;
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════
+   TOAST NOTIFICATION
+═══════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, var(--g2), var(--g3));
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--white);
+  padding: 1rem 1.8rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  max-width: 320px;
+  animation: slideIn 0.35s ease;
+  font-weight: 500;
+}
+.toast.show { display: flex; }
+.toast.success { border-color: rgba(39,174,96,0.5); }
+.toast.error { border-color: rgba(231,76,60,0.5); }
+.toast-icon { font-size: 1.3rem; }
+
+/* ═══════════════════════════════════════════
+   UTILITIES & ANIMATIONS
+═══════════════════════════════════════════ */
+.loading {
+  text-align: center;
+  color: rgba(201,168,76,0.6);
+  padding: 2.5rem;
+  font-size: 0.9rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  color: rgba(255,255,255,0.35);
+  font-size: 0.9rem;
+}
+.empty-state i { font-size: 2.8rem; margin-bottom: 1rem; display: block; }
+.empty-state.dark { color: var(--txt2); }
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(10px); }
+}
+@keyframes slideIn {
+  from { transform: translateX(35px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .donate-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: block; }
+  .prayer-grid { grid-template-columns: repeat(3, 1fr); }
+  .footer-inner { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; text-align: center; gap: 0.8rem; }
+  .committee-grid { grid-template-columns: repeat(2, 1fr); }
+  .audit-summary { grid-template-columns: 1fr; }
+  .jummah-banner { gap: 1.5rem; }
+}
+@media (max-width: 600px) {
+  .countdown-container { padding: 0.9rem 1.8rem; }
+  .countdown-timer { font-size: 2rem; letter-spacing: 3px; }
+  .prayer-grid { grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+  .prayer-card { padding: 1.2rem 0.8rem; }
+  .committee-grid { grid-template-columns: 1fr; }
+  .admin-tabs { gap: 0.4rem; }
+  .admin-tab { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+  .events-grid { grid-template-columns: 1fr; }
+  .login-card { padding: 2rem; }
+  .member-avatar { width: 80px; height: 80px; font-size: 2rem; }
+}
+
+/* লোকেশন সিলেক্টর */
+.location-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 2.2rem;
+  flex-wrap: wrap;
+}
+.location-selector label {
+  color: var(--g2);
+  font-weight: 600;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.95rem;
+}
+.location-select {
+  padding: 0.6rem 1.8rem;
+  border-radius: 40px;
+  background: var(--white);
+  border: 2px solid var(--gold);
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  min-width: 240px;
+  color: var(--g2);
+  font-weight: 500;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.location-select:hover {
+  border-color: var(--gold2);
+  box-shadow: var(--shadow-md);
+}
+.location-select option {
+  background: var(--white);
+  color: var(--g2);
+  padding: 0.5rem;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar">
+  <a href="#" class="nav-brand">
+  <div class="nav-logo">
+    <img src="https://i.postimg.cc/sXxZ5mp9/file-00000000eab471fab770c71aec79b79a.png" 
+         alt="মসজিদের লোগো" 
+         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+  </div>
+  <div class="nav-title">
+    اللَّهُ الصَّمَدُ
+    <small>শেখ বাড়ি জামে মসজিদ</small>
+  </div>
+</a>
+
+  <ul class="nav-links">
+    <li><a href="#prayer">নামাজের সময়</a></li>
+    <li><a href="#notices">নোটিশ</a></li>
+    <li><a href="#events">ইভেন্ট</a></li>
+    <li><a href="#committee">কমিটি</a></li>
+    <li><a href="#gallery">গ্যালারি</a></li>
+    <li><a href="#donate">দান</a></li>
+  <li><a href="#" class="nav-admin-btn admin-only" id="adminNavBtn" onclick="openLoginModal(); return false;">⚙ অ্যাডমিন</a></li>  
+</ul>
+
+  <button class="hamburger" onclick="toggleMobileMenu()"><i class="fa fa-bars"></i></button>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#prayer" onclick="closeMobileMenu()">🕐 নামাজের সময়</a>
+  <a href="#notices" onclick="closeMobileMenu()">📌 নোটিশ</a>
+  <a href="#events" onclick="closeMobileMenu()">📅 ইভেন্ট</a>
+  <a href="#committee" onclick="closeMobileMenu()">👥 কমিটি</a>
+  <a href="#gallery" onclick="closeMobileMenu()">🖼 গ্যালারি</a>
+  <a href="#donate" onclick="closeMobileMenu()">💚 দান</a>
+ <a href="#" class="admin-only" id="mobileAdminLink" onclick="openLoginModal(); closeMobileMenu(); return false;">⚙ অ্যাডমিন</a>
+</div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" id="home">
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-arabic">شَيْخ بَارِي</div>
+    <h1 class="hero-title">শেখ বাড়ি জামে মসজিদ</h1>
+    <p class="hero-sub">ফলদা ঘোনা পাড়া , ভূয়াপুর,টাংগাইল — মুসলিম উম্মাহর আশ্রয় ও ইবাদতের কেন্দ্র</p>
+
+    <div class="hero-prayer-strip" id="heroPrayerStrip">
+      <div class="hero-prayer-item">
+        <span class="label">ফজর</span>
+        <span class="time" id="heroFajr">—</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-prayer-item">
+        <span class="label">যোহর</span>
+        <span class="time" id="heroDhuhr">—</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-prayer-item">
+        <span class="label">আসর</span>
+        <span class="time" id="heroAsr">—</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-prayer-item">
+        <span class="label">মাগরিব</span>
+        <span class="time" id="heroMaghrib">—</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-prayer-item">
+        <span class="label">এশা</span>
+        <span class="time" id="heroIsha">—</span>
+      </div>
+    </div>
+
+<div class="countdown-container" id="prayerCountdownBox">
+  <div class="countdown-label">
+    <i class="fa fa-hourglass-half"></i> 
+    <span id="nextPrayerName">ফজর</span> শুরু হতে বাকি
+  </div>
+  <div class="countdown-timer" id="countdownTimer">-- : -- : --</div>
+  <div class="countdown-jamaat" id="countdownJamaatNote">জামাত: ৫:১৫ টা</div>
+</div>
+
+    <div class="hero-btns">
+      <a href="#prayer" class="btn-primary">নামাজের সময়সূচি দেখুন</a>
+      <a href="#donate" class="btn-outline">মসজিদে দান করুন</a>
+    </div>
+  </div>
+  <div class="scroll-ind"><i class="fa fa-chevron-down"></i></div>
+</section>
+
+<!-- ═══════════ PRAYER TIMES ═══════════ -->
+<section id="prayer">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">أوقات الصلاة</span>
+      <h2 class="section-title">নামাজের সময়সূচি</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">আজকের নামাজের ওয়াক্ত ও ইকামতের সময়</p>
+    </div>
+
+    <div class="location-selector">
+      <label for="prayerLocationSelect">📍 অবস্থান:</label>
+      <select id="prayerLocationSelect" class="location-select">
+        <option value="falda" selected>ফলদা ঘোনা পাড়া, (শেখ বাড়ি )</option>
+        <option value="dhaka">ঢাকা</option>
+        <option value="tangail">টাঙ্গাইল</option>
+        <option value="bhuapur">ভূঞাপুর</option>
+      </select>
+    </div>
+
+    <div class="prayer-grid" id="prayerGrid">
+      <div class="loading"><i class="fa fa-spinner fa-spin"></i> লোড হচ্ছে...</div>
+    </div>
+
+    <div class="jummah-banner">
+      <div class="jummah-icon">🕌</div>
+      <div class="jummah-info">
+        <h3>জুমআর নামাজ</h3>
+        <p id="jummahInfo">প্রতি শুক্রবার — খুতবা শুরু: দুপুর ১:০০ | জামাত: ১:৩০ টা</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ NOTICES ═══════════ -->
+<section id="notices">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">الإعلانات</span>
+      <h2 class="section-title">নোটিশ বোর্ড</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="notice-list" id="noticeList">
+      <div class="loading"><i class="fa fa-spinner fa-spin"></i> লোড হচ্ছে...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ EVENTS ═══════════ -->
+<section id="events">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">البرامج والفعاليات</span>
+      <h2 class="section-title">ইভেন্ট ও প্রোগ্রাম</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="events-grid" id="eventsList">
+      <div class="loading"><i class="fa fa-spinner fa-spin"></i> লোড হচ্ছে...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ COMMITTEE ═══════════ -->
+<section id="committee">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">لجنة المسجد</span>
+      <h2 class="section-title light">ইমাম ও কমিটি</h2>
+      <div class="section-line"></div>
+      <p class="section-desc light">মসজিদ পরিচালনায় নিবেদিত আমাদের টিম</p>
+    </div>
+
+    <div class="committee-grid" id="committeeGrid">
+      <div class="loading"><i class="fa fa-spinner fa-spin"></i> লোড হচ্ছে...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ GALLERY ═══════════ -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">معرض الصور</span>
+      <h2 class="section-title">ফটো গ্যালারি</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-item gallery-placeholder">
+        <i class="fa fa-image"></i>
+        <span>ছবি আপলোড করুন অ্যাডমিন থেকে</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DONATION ═══════════ -->
+<section id="donate">
+  <div class="container">
+    <div class="donate-inner">
+      <div class="donate-info">
+        <h2>মসজিদের উন্নয়নে<br>আপনার অবদান রাখুন</h2>
+        <p>আল্লাহর ঘর নির্মাণ ও সংরক্ষণে অংশ নিন। আপনার প্রতিটি দান সদকায়ে জারিয়া হিসেবে গণ্য হবে।</p>
+        <div class="bank-info">
+          <h4>ব্যাংক তথ্য</h4>
+          <div class="bank-row"><span class="lbl">ব্যাংক</span><span class="val">ইসলামী ব্যাংক বাংলাদেশ</span></div>
+          <div class="bank-row"><span class="lbl">শাখা</span><span class="val">মতিঝিল শাখা</span></div>
+          <div class="bank-row"><span class="lbl">অ্যাকাউন্ট নং</span><span class="val">20500XXX</span></div>
+          <div class="bank-row"><span class="lbl">বিকাশ</span><span class="val">01XXXXXXXXX</span></div>
+        </div>
+
+<div class="public-audit-summary" id="publicAuditSummary">
+  <h4>📊 আর্থিক সারসংক্ষেপ</h4>
+  <div class="audit-row">
+    <span class="audit-label">মোট আয়</span>
+    <span class="audit-value income" id="publicTotalIncome">—</span>
+  </div>
+  <div class="audit-row">
+    <span class="audit-label">মোট ব্যয়</span>
+    <span class="audit-value expense" id="publicTotalExpense">—</span>
+  </div>
+  <div class="audit-row balance">
+    <span class="audit-label">বর্তমান ব্যালেন্স</span>
+    <span class="audit-value" id="publicTotalBalance">—</span>
+  </div>
+  <p class="audit-footer">সর্বশেষ হালনাগাদ: <span id="auditLastUpdated">—</span></p>
+</div>
+
+      </div>
+
+      <div class="donate-form-card">
+        <h3>💚 অনলাইন দান নিবন্ধন</h3>
+        <div class="amount-presets">
+          <button class="amount-btn" onclick="setAmount(500)">৳৫০০</button>
+          <button class="amount-btn" onclick="setAmount(1000)">৳১,০০০</button>
+          <button class="amount-btn" onclick="setAmount(2500)">৳২,৫০০</button>
+          <button class="amount-btn" onclick="setAmount(5000)">৳৫,০০০</button>
+          <button class="amount-btn" onclick="setAmount(10000)">৳১০,০০০</button>
+          <button class="amount-btn" onclick="setAmount(0)">কাস্টম</button>
+        </div>
+        <div class="form-group">
+          <label>পরিমাণ (টাকা)</label>
+          <input class="form-input" type="number" id="donateAmount" placeholder="পরিমাণ লিখুন">
+        </div>
+        <div class="form-group">
+          <label>আপনার নাম</label>
+          <input class="form-input" type="text" id="donateName" placeholder="নাম লিখুন">
+        </div>
+        <div class="form-group">
+          <label>ফোন নম্বর</label>
+          <input class="form-input" type="tel" id="donatePhone" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label>দানের উদ্দেশ্য</label>
+          <input class="form-input" type="text" id="donatePurpose" placeholder="যেমন: মসজিদ নির্মাণ, ইফতার...">
+        </div>
+        <button class="btn-primary" style="width:100%; border-radius:10px;" onclick="submitDonation()">নিবন্ধন করুন</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo-text">🕌 শেখ বাড়ি জামে মসজিদ </div>
+      <p>মুসলিম উম্মাহর ইবাদত, শিক্ষা ও ঐক্যের কেন্দ্রস্থল। আল্লাহর সন্তুষ্টির জন্য নিবেদিত।</p>
+    </div>
+    <div class="footer-col">
+      <h4>দ্রুত লিংক</h4>
+      <ul>
+        <li><a href="#prayer">নামাজের সময়</a></li>
+        <li><a href="#notices">নোটিশ বোর্ড</a></li>
+        <li><a href="#events">ইভেন্ট</a></li>
+        <li><a href="#gallery">গ্যালারি</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>আমাদের সেবা</h4>
+      <ul>
+        <li><a href="#">পাঁচ ওয়াক্ত নামাজ</a></li>
+        <li><a href="#">জুমআর নামাজ</a></li>
+        <li><a href="#">কুরআন শিক্ষা</a></li>
+        <li><a href="#donate">দান ও সদকা</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>যোগাযোগ</h4>
+      <address>
+        📍 ফলদা ঘোনা পাড়া , ভূয়াপুর, টাংগাইল<br>
+        📞 01568769288<br>
+        📧 sheikhbari.con@gmail.com
+      </address>
+    </div>
+  </div>
+  <div class="footer-bottom" id="secretAdminTrigger">
+  <span>© ২০২৫ শেখ বাড়ি জামে মসজিদ</span>
+  <span>সকল অধিকার সংরক্ষিত</span>
+  <span style="display:flex; align-items:center; gap:0.4rem;">
+    <i class="fa fa-code" style="color:var(--gold);"></i> 
+    Developed by 
+    <a href="https://facebook.com/ehanmiraz" target="_blank" rel="noopener noreferrer" 
+       style="color:var(--gold2); text-decoration:none; font-weight:600;">
+      Ehan Miraz
+    </a>
+  </span>
+</div>
+</footer>
+
+<!-- ═══════════ LOGIN MODAL ═══════════ -->
+<div class="login-modal" id="loginModal">
+  <div class="login-card">
+    <div class="login-logo">⚙</div>
+    <h2>অ্যাডমিন লগইন</h2>
+    <p>মসজিদ ব্যবস্থাপনা প্যানেলে প্রবেশ করুন</p>
+    <div class="login-error" id="loginError"></div>
+    <input class="login-input" type="email" id="loginEmail" placeholder="ইমেইল ঠিকানা">
+    <input class="login-input" type="password" id="loginPassword" placeholder="পাসওয়ার্ড" onkeyup="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">
+      <span id="loginBtnText">লগইন করুন</span>
+    </button>
+    <button class="login-cancel" onclick="closeLoginModal()">বাতিল করুন</button>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN PANEL ═══════════ -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-nav">
+    <span class="admin-title">⚙ মসজিদ অ্যাডমিন প্যানেল</span>
+    <div style="display:flex;gap:0.8rem;align-items:center;">
+      <span style="color:rgba(255,255,255,0.5);font-size:0.8rem;" id="adminUserEmail"></span>
+      <button class="admin-close-btn" onclick="doLogout()">লগআউট</button>
+      <button class="admin-close-btn" onclick="closeAdmin()">← সাইটে ফিরুন</button>
+    </div>
+  </div>
+  <div class="admin-content">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('prayer')">🕐 নামাজ</button>
+      <button class="admin-tab" onclick="switchTab('notices')">📌 নোটিশ</button>
+      <button class="admin-tab" onclick="switchTab('events')">📅 ইভেন্ট</button>
+      <button class="admin-tab" onclick="switchTab('committee')">👥 কমিটি</button>
+      <button class="admin-tab" onclick="switchTab('gallery')">🖼 গ্যালারি</button>
+      <button class="admin-tab" onclick="switchTab('donations')">💚 দান তালিকা</button>
+      <button class="admin-tab" onclick="switchTab('audit')">💰 হিসাব (আয়-ব্যয়)</button>
+    </div>
+
+    <!-- Prayer Admin Tab -->
+    <div class="admin-tab-content active" id="tab-prayer">
+      <div class="admin-form-card">
+        <h3>নামাজের সময়সূচি এবং ইকামত আপডেট</h3>
+        <div class="form-row">
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">ফজর ওয়াক্ত</label>
+            <input class="admin-input" id="p_fajr" placeholder="৫:০০">
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">ফজর ইকামত (বাংলা সংখ্যা)</label>
+            <input class="admin-input" id="p_fajr_iqama" placeholder="৫:১৫">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">যোহর ওয়াক্ত</label>
+            <input class="admin-input" id="p_dhuhr" placeholder="১२:३०">
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">যোহর ইকামত (বাংলা সংখ্যা)</label>
+            <input class="admin-input" id="p_dhuhr_iqama" placeholder="१:००">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">আসর ওয়াক্ত</label>
+            <input class="admin-input" id="p_asr" placeholder="४:१५">
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">আসর ইকামত (বাংলা সংখ্যা)</label>
+            <input class="admin-input" id="p_asr_iqama" placeholder="४:३०">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">মাগরিব ওয়াক্ত</label>
+            <input class="admin-input" id="p_maghrib" placeholder="६:४५">
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">মাগরিব ইকামত (বাংলা সংখ্যা)</label>
+            <input class="admin-input" id="p_maghrib_iqama" placeholder="६:५०">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">এশা ওয়াক্ত</label>
+            <input class="admin-input" id="p_isha" placeholder="८:३०">
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">এশা ইকামত (বাংলা সংখ্যা)</label>
+            <input class="admin-input" id="p_isha_iqama" placeholder="८:४५">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">জুমআ খুতবা</label>
+            <input class="admin-input" id="p_jummah_khutba" placeholder="१:००">
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">জুমআ জামাত</label>
+            <input class="admin-input" id="p_jummah_jamaat" placeholder="१:३०">
+          </div>
+        </div>
+        <p style="color:rgba(255,255,255,0.4);font-size:0.75rem;margin-bottom:1rem;">💡 টিপ: ইকামতের সময় বাংলা সংখ্যায় লিখুন (যেমন: ৫:১৫, ১२:३०)</p>
+        <button class="admin-save-btn" onclick="savePrayerTimes()">💾 সময়সূচি সেভ করুন</button>
+      </div>
+    </div>
+
+    <!-- Notices Admin Tab -->
+    <div class="admin-tab-content" id="tab-notices">
+      <div class="admin-form-card">
+        <h3>নতুন নোটিশ যোগ করুন</h3>
+        <input class="admin-input" id="n_title" placeholder="নোটিশের শিরোনাম *">
+        <textarea class="admin-input" id="n_body" placeholder="নোটিশের বিবরণ *"></textarea>
+        <div class="form-row">
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">ধরন</label>
+            <select class="admin-input" id="n_type">
+              <option value="general">সাধারণ</option>
+              <option value="info">তথ্য</option>
+              <option value="urgent">জরুরি</option>
+            </select>
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">তারিখ</label>
+            <input class="admin-input" id="n_date" type="date">
+          </div>
+        </div>
+        <button class="admin-save-btn" onclick="addNotice()">➕ নোটিশ যোগ করুন</button>
+      </div>
+      <div class="admin-form-card">
+        <h3>সব নোটিশ</h3>
+        <div id="adminNoticeList"><div class="loading">লোড হচ্ছে...</div></div>
+      </div>
+    </div>
+
+    <!-- Events Admin Tab -->
+    <div class="admin-tab-content" id="tab-events">
+      <div class="admin-form-card">
+        <h3>নতুন ইভেন্ট যোগ করুন</h3>
+        <input class="admin-input" id="e_title" placeholder="ইভেন্টের নাম *">
+        <textarea class="admin-input" id="e_desc" placeholder="ইভেন্টের বিবরণ *"></textarea>
+        <div class="form-row">
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">তারিখ</label>
+            <input class="admin-input" id="e_date" type="date">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">সময়</label>
+            <input class="admin-input" id="e_time" placeholder="বিকাল ৫:००">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">স্থান</label>
+            <input class="admin-input" id="e_location" placeholder="মসজিদের হল রুম">
+          </div>
+          <div>
+            <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">ধরন</label>
+            <select class="admin-input" id="e_type">
+              <option>মাহফিল</option>
+              <option>সেমিনার</option>
+              <option>ইফতার</option>
+              <option>দোআ মাহফিল</option>
+              <option>অন্যান্য</option>
+            </select>
+          </div>
+        </div>
+        <button class="admin-save-btn" onclick="addEvent()">➕ ইভেন্ট যোগ করুন</button>
+      </div>
+      <div class="admin-form-card">
+        <h3>সব ইভেন্ট</h3>
+        <div id="adminEventList"><div class="loading">লোড হচ্ছে...</div></div>
+      </div>
+    </div>
+
+    <!-- Committee Admin Tab - UPDATED -->
+    <div class="admin-tab-content" id="tab-committee">
+      <div class="admin-form-card">
+        <h3>নতুন সদস্য যোগ করুন (প্রোফাইল ছবি সহ)</h3>
+        <div class="form-row">
+          <input class="admin-input" id="c_name" placeholder="সদস্যের নাম *">
+          <input class="admin-input" id="c_role" placeholder="পদবি (খতিব, মুয়াজ্জিন) *">
+          <input class="admin-input" id="c_phone" placeholder="ফোন নম্বর">
+          <input class="admin-input" id="c_order" type="number" placeholder="ক্রমিক (১, २, ३...)">
+        </div>
+        <label style="color:rgba(255,255,255,0.6);font-size:0.82rem;">প্রোফাইল ছবির URL</label>
+        <input class="admin-input" id="c_image" placeholder="ছবির সম্পূর্ণ URL (যেমন: https://example.com/image.jpg)">
+        <p style="color:rgba(255,255,255,0.3);font-size:0.75rem;margin:0.5rem 0 1rem;">💡 টিপ: Imgur বা Firebase Storage থেকে ছবি আপলোড করে URL দিন</p>
+        <button class="admin-save-btn" onclick="addMember()">➕ সদস্য যোগ করুন</button>
+      </div>
+      <div class="admin-form-card">
+        <h3>সব সদস্য</h3>
+        <div id="adminMemberList"><div class="loading">লোড হচ্ছে...</div></div>
+      </div>
+    </div>
+
+    <!-- Gallery Admin Tab -->
+    <div class="admin-tab-content" id="tab-gallery">
+      <div class="admin-form-card">
+        <h3>ছবি যোগ করুন (URL দিয়ে)</h3>
+        <input class="admin-input" id="g_url" placeholder="ছবির URL *">
+        <input class="admin-input" id="g_caption" placeholder="ক্যাপশন">
+        <button class="admin-save-btn" onclick="addGalleryItem()">➕ ছবি যোগ করুন</button>
+        <p style="color:rgba(255,255,255,0.3);font-size:0.78rem;margin-top:0.8rem;">
+          💡 টিপ: Firebase Storage বা Imgur থেকে ছবি আপলোড করে URL দিন
+        </p>
+      </div>
+      <div class="admin-form-card">
+        <h3>সব ছবি</h3>
+        <div id="adminGalleryList"><div class="loading">লোড হচ্ছে...</div></div>
+      </div>
+    </div>
+
+    <!-- Donations Admin Tab -->
+    <div class="admin-tab-content" id="tab-donations">
+      <div class="admin-form-card">
+        <h3>দানের তালিকা</h3>
+        <div id="adminDonationList"><div class="loading">লোড হচ্ছে...</div></div>
+      </div>
+    </div>
+
+    <!-- Audit Tab -->
+    <div class="admin-tab-content" id="tab-audit">
+      <div class="admin-form-card">
+        <h3>নতুন লেনদেন যোগ করুন</h3>
+        <div class="form-row">
+          <select class="admin-input" id="txn_type">
+            <option value="income">➕ আয় (Income)</option>
+            <option value="expense">➖ ব্যয় (Expense)</option>
+          </select>
+          <input class="admin-input" type="number" id="txn_amount" placeholder="পরিমাণ (টাকা) *">
+        </div>
+        <input class="admin-input" id="txn_desc" placeholder="বিবরণ (যেমন: দান, বিদ্যুৎ বিল)">
+        <div class="form-row">
+          <input class="admin-input" id="txn_category" placeholder="ক্যাটাগরি (ঐচ্ছিক)">
+          <input class="admin-input" type="date" id="txn_date">
+        </div>
+        <button class="admin-save-btn" onclick="addTransaction()">➕ লেনদেন সংরক্ষণ</button>
+      </div>
+
+      <div class="admin-form-card">
+        <h3>আর্থিক সারসংক্ষেপ</h3>
+        <div id="auditSummary" class="audit-summary">
+          <div class="summary-card income"><div class="label">মোট আয়</div><div class="value" id="totalIncome">0</div></div>
+          <div class="summary-card expense"><div class="label">মোট ব্যয়</div><div class="value" id="totalExpense">0</div></div>
+          <div class="summary-card balance"><div class="label">বর্তমান ব্যালেন্স</div><div class="value" id="totalBalance">0</div></div>
+        </div>
+        <h3 style="margin-top:1.5rem;">সকল লেনদেন</h3>
+        <div id="adminTransactionList"><div class="loading">লোড হচ্ছে...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span id="toastMsg">সম্পন্ন হয়েছে</span>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   FIREBASE CONFIG
+══════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCG5KIknXFOB22gjQSZUJxbk3NXAUNFevw",
+  authDomain: "sheik-bari-masjid.firebaseapp.com",
+  projectId: "sheik-bari-masjid",
+  storageBucket: "sheik-bari-masjid.firebasestorage.app",
+  messagingSenderId: "528828672342",
+  appId: "1:528828672342:web:f0dae78be319c7b36dcef7"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+/* ══════════════════════════════════════════
+   PRAYER DATA
+══════════════════════════════════════════ */
+const PRAYERS = [
+  { key: 'fajr',    ar: 'الفجر',  bn: 'ফজর',    en: 'Fajr',    icon: '🌙' },
+  { key: 'dhuhr',   ar: 'الظهر',  bn: 'যোহর',   en: 'Dhuhr',   icon: '☀️' },
+  { key: 'asr',     ar: 'العصر',  bn: 'আসর',    en: 'Asr',     icon: '🌤' },
+  { key: 'maghrib', ar: 'المغرب', bn: 'মাগরিব', en: 'Maghrib', icon: '🌅' },
+  { key: 'isha',    ar: 'العشاء', bn: 'এশা',    en: 'Isha',    icon: '🌙' },
+];
+
+const PRAYER_CONFIG = {
+  locations: {
+    falda: { lat: 24.5052, lon: 89.8689, name: 'ফলদা বাজার, ভূঞাপুর' },
+    dhaka: { lat: 23.8103, lon: 90.4125, name: 'ঢাকা' },
+    tangail: { lat: 24.3385, lon: 89.9867, name: 'টাঙ্গাইল' },
+    bhuapur: { lat: 24.4583, lon: 89.8667, name: 'ভূঞাপুর' }
+  },
+  defaultLocation: 'falda',
+  method: 2
+};
+
+const BN_DIGITS = ['०','१','२','३','४','५','६','७','८','९'];
+const EN_TO_BN = {
+  '0': '०', '1': '१', '2': '२', '3': '३', '4': '४',
+  '5': '५', '6': '६', '7': '७', '8': '८', '9': '९'
+};
+
+function enToBn(str) {
+  return String(str).replace(/\d/g, d => EN_TO_BN[d]);
+}
+
+// ────────────────────────────────────────────
+// নতুন ফাংশন: normalizeDigits (ব্যবহারকারীর প্রদত্ত)
+function normalizeDigits(str) {
+  const map = {
+    '০':'0','১':'1','২':'2','৩':'3','৪':'4',
+    '৫':'5','৬':'6','৭':'7','৮':'8','৯':'9',
+    '०':'0','१':'1','२':'2','३':'3','४':'4',
+    '५':'5','६':'6','७':'7','८':'8','९':'9'
+  };
+  return String(str).replace(/[০-৯०-९]/g, d => map[d] || d);
+}
+
+// ────────────────────────────────────────────
+// নতুন ফাংশন: getPrayerTimeDate (ব্যবহারকারীর প্রদত্ত)
+function getPrayerTimeDate(timeStr, prayerKey) {
+  if (!timeStr || timeStr === '—') return null;
+
+  let clean = normalizeDigits(timeStr)
+    .replace(/[^\d:APMapm ]/g, '')
+    .trim();
+
+  let now = new Date();
+  let prayerDate = new Date(now);
+
+  let hour = 0;
+  let minute = 0;
+
+  if (clean.toLowerCase().includes('am') || clean.toLowerCase().includes('pm')) {
+    const parsed = new Date("2000/01/01 " + clean);
+    hour = parsed.getHours();
+    minute = parsed.getMinutes();
+  } else {
+    const parts = clean.split(':');
+    hour = parseInt(parts[0]) || 0;
+    minute = parseInt(parts[1]) || 0;
+
+    if (['dhuhr','asr','maghrib','isha'].includes(prayerKey) && hour < 12) {
+      hour += 12;
+    }
+  }
+
+  prayerDate.setHours(hour, minute, 0, 0);
+  return prayerDate;
+}
+// ────────────────────────────────────────────
+
+let currentLocation = PRAYER_CONFIG.locations[PRAYER_CONFIG.defaultLocation];
+let prayerData = {};
+
+async function fetchPrayerTimesFromAPI(lat, lon) {
+  const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${PRAYER_CONFIG.method}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  if (data.code === 200 && data.data && data.data.timings) {
+    return data.data.timings;
+  }
+  throw new Error('Invalid API response');
+}
+
+function formatPrayerTime(time24) {
+  if (!time24) return '—';
+  const [hour, minute] = time24.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hour, minute, 0);
+  return date.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/ AM| PM/, '');
+}
+
+function renderPrayerGridFromTimings(timings) {
+  const data = {};
+  PRAYERS.forEach(p => {
+    const apiKey = p.key.charAt(0).toUpperCase() + p.key.slice(1);
+    const time24 = timings[apiKey];
+    const formattedTime = formatPrayerTime(time24);
+    data[p.key] = formattedTime;
+    data[p.key + '_iqama'] = prayerData[p.key + '_iqama'] || '';
+    data[p.key + '_24h'] = time24;
+  });
+  
+  if (!data.fajr_iqama) data.fajr_iqama = '५:१५';
+  if (!data.dhuhr_iqama) data.dhuhr_iqama = '१२:३०';
+  if (!data.asr_iqama) data.asr_iqama = '४:३०';
+  if (!data.maghrib_iqama) data.maghrib_iqama = '६:५०';
+  if (!data.isha_iqama) data.isha_iqama = '८:४५';
+  
+  prayerData = data;
+
+  const grid = document.getElementById('prayerGrid');
+  grid.innerHTML = PRAYERS.map(p => {
+    const iqamaDisplay = data[p.key + '_iqama'] || '—';
+    return `
+    <div class="prayer-card">
+      <div class="prayer-icon">${p.icon}</div>
+      <div class="prayer-name">${p.ar}</div>
+      <div class="prayer-name-bn">${p.bn}</div>
+      <div class="prayer-time">${data[p.key]}</div>
+      <div class="prayer-iqama">ইকামত: ${iqamaDisplay}</div>
+    </div>
+  `;
+  }).join('');
+
+  document.getElementById('heroFajr').textContent = data.fajr;
+  document.getElementById('heroDhuhr').textContent = data.dhuhr;
+  document.getElementById('heroAsr').textContent = data.asr;
+  document.getElementById('heroMaghrib').textContent = data.maghrib;
+  document.getElementById('heroIsha').textContent = data.isha;
+
+  startCountdown();
+}
+
+function updateCountdown() {
+  if (!prayerData || Object.keys(prayerData).length === 0) return;
+
+  const now = new Date();
+  let nextPrayer = null;
+  let nextTime = null;
+  let nextIqama = '';
+  let isIqamaTime = false;
+
+  const prayerOrder = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+
+  for (let key of prayerOrder) {
+    const iqamaStr = prayerData[key + '_iqama'];
+    const waktStr = prayerData[key];
+    if (!iqamaStr || !waktStr) continue;
+
+    const waktDate = getPrayerTimeDate(waktStr, key);
+    const iqamaDate = getPrayerTimeDate(iqamaStr, key);
+    if (!waktDate || !iqamaDate) continue;
+
+    if (now >= waktDate && now < iqamaDate) {
+      nextPrayer = key;
+      nextTime = iqamaDate;
+      nextIqama = iqamaStr;
+      isIqamaTime = true;
+      break;
+    }
+  }
+
+  if (!nextPrayer) {
+    for (let key of prayerOrder) {
+      const timeStr = prayerData[key];
+      const prayerDate = getPrayerTimeDate(timeStr, key);
+      if (!prayerDate) continue;
+      if (prayerDate > now) {
+        nextPrayer = key;
+        nextTime = prayerDate;
+        nextIqama = prayerData[key + '_iqama'] || '';
+        isIqamaTime = false;
+        break;
+      }
+    }
+  }
+
+  if (!nextPrayer) {
+    const fajrTime = getPrayerTimeDate(prayerData.fajr, 'fajr');
+    if (fajrTime) {
+      fajrTime.setDate(fajrTime.getDate() + 1);
+      nextPrayer = 'fajr';
+      nextTime = fajrTime;
+      nextIqama = prayerData.fajr_iqama || '';
+      isIqamaTime = false;
+    }
+  }
+
+  if (!nextTime) {
+    document.getElementById('countdownTimer').textContent = '-- : -- : --';
+    return;
+  }
+
+  const prayerNamesBn = { fajr: 'ফজর', dhuhr: 'যোহর', asr: 'আসর', maghrib: 'মাগরিব', isha: 'এশা' };
+  document.getElementById('nextPrayerName').textContent = prayerNamesBn[nextPrayer];
+  
+  const jamaatNote = document.getElementById('countdownJamaatNote');
+  if (isIqamaTime) {
+    jamaatNote.textContent = `জামাত: ${nextIqama} টা (ইকামত পর্যন্ত বাকি)`;
+  } else {
+    jamaatNote.textContent = nextIqama ? `জামাত: ${nextIqama} টা` : '';
+  }
+
+  const diff = nextTime - now;
+  if (diff <= 0) {
+    document.getElementById('countdownTimer').textContent = '००:००:००';
+    return;
+  }
+
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  const formatted = enToBn(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+  document.getElementById('countdownTimer').textContent = formatted;
+}
+
+let countdownInterval = null;
+function startCountdown() {
+  if (countdownInterval) clearInterval(countdownInterval);
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+async function loadPrayerTimesForLocation(locKey) {
+  const loc = PRAYER_CONFIG.locations[locKey];
+  currentLocation = loc;
+  const today = new Date().toISOString().split('T')[0];
+  const cacheRef = db.collection('prayer_cache').doc(`${locKey}_${today}`);
+
+  try {
+    const doc = await cacheRef.get();
+    if (doc.exists) {
+      renderPrayerGridFromTimings(doc.data());
+      startCountdown();
+      return;
+    }
+    const timings = await fetchPrayerTimesFromAPI(loc.lat, loc.lon);
+    await cacheRef.set({ ...timings, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    renderPrayerGridFromTimings(timings);
+    startCountdown();
+  } catch (e) {
+    console.warn('API/cache failed, using backup');
+    const backupDoc = await db.collection('settings').doc('prayer_times').get();
+    if (backupDoc.exists) {
+      const fb = backupDoc.data();
+      const converted = { Fajr: fb.fajr, Dhuhr: fb.dhuhr, Asr: fb.asr, Maghrib: fb.maghrib, Isha: fb.isha };
+      renderPrayerGridFromTimings(converted);
+      startCountdown();
+    }
+  }
+}
+
+/* ══════════════════════════════════════════
+   NOTICES
+══════════════════════════════════════════ */
+const MONTH_BN = ['জানু','ফেব','মার','এপ','মে','জুন','জুল','আগ','সেপ','অক','নভ','ডিসে'];
+function renderNotice(doc) {
+  const d = doc.data();
+  const date = d.date ? new Date(d.date) : new Date();
+  const badge = { urgent:'badge-urgent', info:'badge-info', general:'badge-general' }[d.type] || 'badge-general';
+  const badgeLbl = { urgent:'জরুরি', info:'তথ্য', general:'সাধারণ' }[d.type] || 'সাধারণ';
+  return `
+    <div class="notice-card">
+      <div class="notice-date-box">
+        <div class="day">${enToBn(date.getDate())}</div>
+        <div class="month">${MONTH_BN[date.getMonth()]}</div>
+      </div>
+      <div class="notice-body">
+        <span class="notice-badge ${badge}">${badgeLbl}</span>
+        <h3>${d.title}</h3>
+        <p>${d.body || ''}</p>
+      </div>
+    </div>`;
+}
+function loadNotices() {
+  db.collection('notices').orderBy('createdAt', 'desc').limit(8)
+    .onSnapshot(snap => {
+      const list = document.getElementById('noticeList');
+      list.innerHTML = snap.empty ? '<div class="empty-state dark"><i class="fa fa-bell-slash"></i>কোনো নোটিশ নেই</div>' : snap.docs.map(renderNotice).join('');
+      loadAdminNotices(snap);
+    });
+}
+
+/* ══════════════════════════════════════════
+   EVENTS
+══════════════════════════════════════════ */
+function renderEvent(doc) {
+  const d = doc.data();
+  const date = d.date ? new Date(d.date) : new Date();
+  return `
+    <div class="event-card">
+      <div class="event-header">
+        <span class="event-date-tag">📅 ${date.toLocaleDateString('bn-BD')}</span>
+        <span class="event-type">${d.type || 'ইভেন্ট'}</span>
+      </div>
+      <div class="event-body">
+        <h3>${d.title}</h3>
+        <p>${d.desc || ''}</p>
+      </div>
+      <div class="event-meta">
+        ${d.time ? `<span><i class="fa fa-clock-o"></i>${d.time}</span>` : ''}
+        ${d.location ? `<span><i class="fa fa-map-marker"></i>${d.location}</span>` : ''}
+      </div>
+    </div>`;
+}
+function loadEvents() {
+  db.collection('events').orderBy('date', 'asc').limit(6)
+    .onSnapshot(snap => {
+      const list = document.getElementById('eventsList');
+      list.innerHTML = snap.empty ? '<div class="empty-state dark" style="grid-column:1/-1"><i class="fa fa-calendar"></i>কোনো আসন্ন ইভেন্ট নেই</div>' : snap.docs.map(renderEvent).join('');
+      loadAdminEvents(snap);
+    });
+}
+
+/* ══════════════════════════════════════════
+   COMMITTEE - WITH PROFILE IMAGES
+══════════════════════════════════════════ */
+function renderMember(doc) {
+  const d = doc.data();
+  const imgUrl = d.image || null;
+  const fallbackInitial = d.name ? d.name.trim()[0].toUpperCase() : '?';
+  
+  return `
+    <div class="member-card">
+      <div class="member-avatar ${imgUrl ? '' : 'placeholder'}">
+        ${imgUrl ? 
+          `<img src="${imgUrl}" alt="${d.name}" onerror="this.parentElement.textContent='${fallbackInitial}'">` : 
+          fallbackInitial
+        }
+      </div>
+      <div class="member-role">${d.role || 'সদস্য'}</div>
+      <div class="member-name">${d.name}</div>
+      ${d.phone ? `<div class="member-phone"><i class="fa fa-phone"></i>${d.phone}</div>` : ''}
+    </div>`;
+}
+function loadCommittee() {
+  db.collection('committee').orderBy('order', 'asc')
+    .onSnapshot(snap => {
+      const grid = document.getElementById('committeeGrid');
+      grid.innerHTML = snap.empty ? '<div class="empty-state" style="grid-column:1/-1"><i class="fa fa-users"></i>কোনো সদস্য নেই</div>' : snap.docs.map(renderMember).join('');
+      loadAdminMembers(snap);
+    });
+}
+
+/* ══════════════════════════════════════════
+   GALLERY
+══════════════════════════════════════════ */
+function loadGallery() {
+  db.collection('gallery').orderBy('createdAt', 'desc').limit(12)
+    .onSnapshot(snap => {
+      const grid = document.getElementById('galleryGrid');
+      if (snap.empty) {
+        grid.innerHTML = `<div class="gallery-item gallery-placeholder"><i class="fa fa-image"></i><span>ছবি আপলোড করুন অ্যাডমিন থেকে</span></div>`;
+      } else {
+        grid.innerHTML = snap.docs.map(doc => {
+          const d = doc.data();
+          return `
+            <div class="gallery-item">
+              <img src="${d.url}" alt="${d.caption || 'মসজিদ'}" 
+                   onerror="this.style.display='none'; this.parentElement.classList.add('image-error'); this.parentElement.innerHTML='<i class=\\'fa fa-image\\'></i>'">
+              <div class="gallery-overlay"><span>${d.caption || ''}</span></div>
+            </div>`;
+        }).join('');
+      }
+      loadAdminGallery(snap);
+    });
+}
+
+/* ══════════════════════════════════════════
+   DONATIONS
+══════════════════════════════════════════ */
+function setAmount(val) {
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  if (val > 0) { 
+    document.getElementById('donateAmount').value = enToBn(val);
+    event.target.classList.add('selected');
+  }
+  else { document.getElementById('donateAmount').value = ''; document.getElementById('donateAmount').focus(); }
+}
+function submitDonation() {
+  const amount = document.getElementById('donateAmount').value;
+  const name = document.getElementById('donateName').value;
+  const phone = document.getElementById('donatePhone').value;
+  const purpose = document.getElementById('donatePurpose').value;
+  if (!amount || !name) { showToast('নাম ও পরিমাণ আবশ্যক', 'error'); return; }
+  db.collection('donations').add({
+    amount: Number(amount), name, phone, purpose,
+    status: 'নিবন্ধিত',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    showToast('দান নিবন্ধন সম্পন্ন! জাযাকাল্লাহু খাইরান 💚');
+    ['donateAmount','donateName','donatePhone','donatePurpose'].forEach(id => document.getElementById(id).value = '');
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  }).catch(() => showToast('সংরক্ষণ ব্যর্থ হয়েছে', 'error'));
+}
+
+/* ══════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════ */
+auth.onAuthStateChanged(user => {
+  const adminElements = document.querySelectorAll('.admin-only');
+  const adminEmailSpan = document.getElementById('adminUserEmail');
+  
+  if (user) {
+    adminElements.forEach(el => el.style.display = '');
+    if (adminEmailSpan) adminEmailSpan.textContent = user.email;
+  } else {
+    adminElements.forEach(el => el.style.display = 'none');
+    if (adminEmailSpan) adminEmailSpan.textContent = '';
+  }
+});
+
+function openLoginModal() {
+  if (auth.currentUser) { openAdmin(); return; }
+  document.getElementById('loginModal').classList.add('open');
+  setTimeout(() => document.getElementById('loginEmail').focus(), 100);
+}
+function closeLoginModal() { 
+  document.getElementById('loginModal').classList.remove('open');
+  document.getElementById('loginError').textContent = '';
+}
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const btn = document.getElementById('loginBtnText');
+  const err = document.getElementById('loginError');
+  if (!email || !pass) { err.textContent = 'ইমেইল ও পাসওয়ার্ড দিন'; return; }
+  btn.textContent = 'লগইন হচ্ছে...'; err.textContent = '';
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => { closeLoginModal(); openAdmin(); btn.textContent = 'লগইন করুন'; })
+    .catch(e => { btn.textContent = 'লগইন করুন'; err.textContent = 'ইমেইল বা পাসওয়ার্ড ভুল'; });
+}
+function doLogout() { auth.signOut().then(() => { closeAdmin(); showToast('লগআউট সম্পন্ন'); }); }
+function openAdmin() {
+  if (!auth.currentUser) {
+    openLoginModal();
+    return;
+  }
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadAdminData();
+}
+function closeAdmin() { 
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ══════════════════════════════════════════
+   ADMIN ACTIONS
+══════════════════════════════════════════ */
+function switchTab(name) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'audit') loadAuditData();
+}
+
+function loadAdminData() {
+  db.collection('settings').doc('prayer_times').get().then(doc => {
+    if (doc.exists) {
+      const d = doc.data();
+      ['fajr','dhuhr','asr','maghrib','isha'].forEach(p => {
+        const el = document.getElementById('p_' + p); if(el) el.value = d[p] || '';
+        const iqEl = document.getElementById('p_' + p + '_iqama'); if(iqEl) iqEl.value = d[p+'_iqama'] || '';
+      });
+      const jk = document.getElementById('p_jummah_khutba'); if(jk) jk.value = d.jummah_khutba || '';
+      const jj = document.getElementById('p_jummah_jamaat'); if(jj) jj.value = d.jummah_jamaat || '';
+    }
+  });
+}
+
+function savePrayerTimes() {
+  const data = {};
+  ['fajr','dhuhr','asr','maghrib','isha'].forEach(p => {
+    data[p] = document.getElementById('p_' + p).value;
+    data[p + '_iqama'] = document.getElementById('p_' + p + '_iqama').value;
+  });
+  data.jummah_khutba = document.getElementById('p_jummah_khutba').value;
+  data.jummah_jamaat = document.getElementById('p_jummah_jamaat').value;
+  
+  db.collection('settings').doc('prayer_times').set(data)
+    .then(() => {
+      prayerData = data;
+      loadPrayerTimesForLocation('falda');
+      showToast('নামাজের সময়সূচি আপডেট হয়েছে ✅');
+    })
+    .catch(() => showToast('সংরক্ষণ ব্যর্থ', 'error'));
+}
+
+function addNotice() {
+  const title = document.getElementById('n_title').value.trim();
+  const body = document.getElementById('n_body').value.trim();
+  const type = document.getElementById('n_type').value;
+  const date = document.getElementById('n_date').value;
+  if (!title) { showToast('শিরোনাম আবশ্যক', 'error'); return; }
+  db.collection('notices').add({ title, body, type, date, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(() => { showToast('নোটিশ যোগ হয়েছে ✅'); document.getElementById('n_title').value = ''; document.getElementById('n_body').value = ''; })
+    .catch(() => showToast('ব্যর্থ', 'error'));
+}
+
+function addEvent() {
+  const title = document.getElementById('e_title').value.trim();
+  const desc = document.getElementById('e_desc').value.trim();
+  const date = document.getElementById('e_date').value;
+  const time = document.getElementById('e_time').value;
+  const location = document.getElementById('e_location').value;
+  const type = document.getElementById('e_type').value;
+  if (!title) { showToast('ইভেন্টের নাম আবশ্যক', 'error'); return; }
+  db.collection('events').add({ title, desc, date, time, location, type, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(() => { showToast('ইভেন্ট যোগ হয়েছে ✅'); document.getElementById('e_title').value = ''; document.getElementById('e_desc').value = ''; })
+    .catch(() => showToast('ব্যর্থ', 'error'));
+}
+
+function addMember() {
+  const name = document.getElementById('c_name').value.trim();
+  const role = document.getElementById('c_role').value.trim();
+  const phone = document.getElementById('c_phone').value;
+  const order = Number(document.getElementById('c_order').value) || 99;
+  const image = document.getElementById('c_image').value.trim();
+  if (!name || !role) { showToast('নাম ও পদবি আবশ্যক', 'error'); return; }
+  db.collection('committee').add({ name, role, phone, image, order, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(() => { 
+      showToast('সদস্য যোগ হয়েছে ✅');
+      document.getElementById('c_name').value = '';
+      document.getElementById('c_role').value = '';
+      document.getElementById('c_phone').value = '';
+      document.getElementById('c_image').value = '';
+      document.getElementById('c_order').value = '';
+    })
+    .catch(() => showToast('ব্যর্থ', 'error'));
+}
+
+function addGalleryItem() {
+  const url = document.getElementById('g_url').value.trim();
+  const caption = document.getElementById('g_caption').value.trim();
+  if (!url) { showToast('URL আবশ্যক', 'error'); return; }
+  db.collection('gallery').add({ url, caption, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(() => { showToast('ছবি যোগ হয়েছে ✅'); document.getElementById('g_url').value = ''; document.getElementById('g_caption').value = ''; })
+    .catch(() => showToast('ব্যর্থ', 'error'));
+}
+
+function deleteDoc(collection, id) {
+  if (!confirm('মুছে ফেলবেন?')) return;
+  db.collection(collection).doc(id).delete().then(() => showToast('মুছে ফেলা হয়েছে')).catch(() => showToast('ব্যর্থ', 'error'));
+}
+
+function addTransaction() {
+  const type = document.getElementById('txn_type').value;
+  const amount = parseFloat(document.getElementById('txn_amount').value);
+  const desc = document.getElementById('txn_desc').value.trim();
+  const category = document.getElementById('txn_category').value.trim();
+  const date = document.getElementById('txn_date').value;
+  if (!amount || amount <= 0) { showToast('সঠিক পরিমাণ দিন', 'error'); return; }
+  if (!desc) { showToast('বিবরণ আবশ্যক', 'error'); return; }
+
+  db.collection('transactions').add({
+    type, amount, description: desc, category, date,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    showToast('লেনদেন সংরক্ষিত ✅');
+    document.getElementById('txn_amount').value = '';
+    document.getElementById('txn_desc').value = '';
+    document.getElementById('txn_category').value = '';
+  }).catch(() => showToast('ব্যর্থ', 'error'));
+}
+
+function loadAuditData() {
+  db.collection('transactions').orderBy('createdAt', 'desc')
+    .onSnapshot(snap => {
+      let totalIncome = 0, totalExpense = 0;
+      const rows = [];
+      snap.docs.forEach(doc => {
+        const d = doc.data();
+        if (d.type === 'income') totalIncome += d.amount;
+        else totalExpense += d.amount;
+        rows.push(`
+          <tr>
+            <td>${d.date || '—'}</td>
+            <td>${d.type === 'income' ? '➕ আয়' : '➖ ব্যয়'}</td>
+            <td>${d.category || '—'}</td>
+            <td>${d.description}</td>
+            <td>৳ ${d.amount.toLocaleString()}</td>
+            <td><button class="del-btn" onclick="deleteDoc('transactions','${doc.id}')">🗑</button></td>
+          </tr>`);
+      });
+      const balance = totalIncome - totalExpense;
+      document.getElementById('totalIncome').textContent = `৳ ${totalIncome.toLocaleString()}`;
+      document.getElementById('totalExpense').textContent = `৳ ${totalExpense.toLocaleString()}`;
+      document.getElementById('totalBalance').textContent = `৳ ${balance.toLocaleString()}`;
+      const tbody = rows.length ? rows.join('') : '<tr><td colspan="6" style="text-align:center;padding:2rem;">কোনো লেনদেন নেই</td></tr>';
+      document.getElementById('adminTransactionList').innerHTML = `
+        <table class="admin-table">
+          <thead><tr><th>তারিখ</th><th>ধরন</th><th>ক্যাটাগরি</th><th>বিবরণ</th><th>পরিমাণ</th><th></th></tr></thead>
+          <tbody>${tbody}</tbody>
+        </table>`;
+    });
+}
+
+function loadPublicAuditSummary() {
+  db.collection('transactions').onSnapshot(snap => {
+    let totalIncome = 0, totalExpense = 0;
+    snap.docs.forEach(doc => {
+      const d = doc.data();
+      if (d.type === 'income') totalIncome += d.amount;
+      else totalExpense += d.amount;
+    });
+    const balance = totalIncome - totalExpense;
+    const incomeEl = document.getElementById('publicTotalIncome');
+    const expenseEl = document.getElementById('publicTotalExpense');
+    const balanceEl = document.getElementById('publicTotalBalance');
+    const lastUpdatedEl = document.getElementById('auditLastUpdated');
+    if (incomeEl) {
+      incomeEl.textContent = '৳ ' + totalIncome.toLocaleString();
+      expenseEl.textContent = '৳ ' + totalExpense.toLocaleString();
+      balanceEl.textContent = '৳ ' + balance.toLocaleString();
+      const now = new Date();
+      lastUpdatedEl.textContent = now.toLocaleDateString('bn-BD', { year:'numeric', month:'short', day:'numeric' });
+    }
+  });
+}
+
+function loadAdminNotices(snap) {
+  const el = document.getElementById('adminNoticeList');
+  if (!el) return;
+  if (snap.empty) { el.innerHTML = '<div class="empty-state">নোটিশ নেই</div>'; return; }
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>তারিখ</th><th>শিরোনাম</th><th>ধরন</th><th></th></tr></thead><tbody>${snap.docs.map(d => `<tr><td>${d.data().date || '—'}</td><td>${d.data().title}</td><td>${d.data().type}</td><td><button class="del-btn" onclick="deleteDoc('notices','${d.id}')">🗑</button></td></tr>`).join('')}</tbody></table>`;
+}
+
+function loadAdminEvents(snap) {
+  const el = document.getElementById('adminEventList');
+  if (!el) return;
+  if (snap.empty) { el.innerHTML = '<div class="empty-state">ইভেন্ট নেই</div>'; return; }
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>তারিখ</th><th>নাম</th><th>ধরন</th><th></th></tr></thead><tbody>${snap.docs.map(d => `<tr><td>${d.data().date || '—'}</td><td>${d.data().title}</td><td>${d.data().type || '—'}</td><td><button class="del-btn" onclick="deleteDoc('events','${d.id}')">🗑</button></td></tr>`).join('')}</tbody></table>`;
+}
+
+function loadAdminMembers(snap) {
+  const el = document.getElementById('adminMemberList');
+  if (!el) return;
+  if (snap.empty) { el.innerHTML = '<div class="empty-state">সদস্য নেই</div>'; return; }
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>নাম</th><th>পদবি</th><th>ফোন</th><th>ছবি</th><th></th></tr></thead><tbody>${snap.docs.map(d => `<tr><td>${d.data().name}</td><td>${d.data().role}</td><td>${d.data().phone || '—'}</td><td>${d.data().image ? '✅' : '❌'}</td><td><button class="del-btn" onclick="deleteDoc('committee','${d.id}')">🗑</button></td></tr>`).join('')}</tbody></table>`;
+}
+
+function loadAdminGallery(snap) {
+  const el = document.getElementById('adminGalleryList');
+  if (!el) return;
+  if (snap.empty) { el.innerHTML = '<div class="empty-state">ছবি নেই</div>'; return; }
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>ক্যাপশন</th><th>URL</th><th></th></tr></thead><tbody>${snap.docs.map(d => `<tr><td>${d.data().caption || '—'}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;">${d.data().url}</td><td><button class="del-btn" onclick="deleteDoc('gallery','${d.id}')">🗑</button></td></tr>`).join('')}</tbody></table>`;
+}
+
+let donationsLoaded = false;
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      if (this.textContent.includes('দান তালিকা') && !donationsLoaded) {
+        donationsLoaded = true;
+        db.collection('donations').orderBy('createdAt', 'desc').limit(50).onSnapshot(snap => {
+          const el = document.getElementById('adminDonationList');
+          if (!el) return;
+          if (snap.empty) { el.innerHTML = '<div class="empty-state">কোনো দান নেই</div>'; return; }
+          let total = 0; snap.docs.forEach(d => total += (d.data().amount || 0));
+          el.innerHTML = `<div style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;color:var(--gold2);">মোট দান: <strong>৳${total.toLocaleString('bn-BD')}</strong> (${snap.docs.length} জন)</div>
+          <table class="admin-table"><thead><tr><th>নাম</th><th>পরিমাণ</th><th>ফোন</th><th>উদ্দেশ্য</th><th>অবস্থা</th></tr></thead><tbody>${snap.docs.map(d => `<tr><td>${d.data().name}</td><td>৳${(d.data().amount||0).toLocaleString()}</td><td>${d.data().phone||'—'}</td><td>${d.data().purpose||'—'}</td><td><span style="color:#2ecc71;">${d.data().status||'নিবন্ধিত'}</span></td></tr>`).join('')}</tbody></table>`;
+        });
+      }
+    });
+  });
+});
+
+function toggleMobileMenu() { document.getElementById('mobileNav').classList.toggle('open'); }
+function closeMobileMenu() { document.getElementById('mobileNav').classList.remove('open'); }
+
+let toastTimer;
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  const icon = document.getElementById('toastIcon');
+  document.getElementById('toastMsg').textContent = msg;
+  icon.textContent = type === 'error' ? '❌' : '✅';
+  toast.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = '1'; });
+}, { threshold: 0.1 });
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+function initialLoad() {
+  document.querySelectorAll('section').forEach(s => { s.style.opacity = '0'; s.style.transition = 'opacity 0.6s ease'; observer.observe(s); });
+  
+  const select = document.getElementById('prayerLocationSelect');
+  if (select) {
+    select.addEventListener('change', e => loadPrayerTimesForLocation(e.target.value));
+    loadPrayerTimesForLocation(PRAYER_CONFIG.defaultLocation);
+  }
+  loadNotices();
+  loadEvents();
+  loadCommittee();
+  loadGallery();
+  loadPublicAuditSummary();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initialLoad();
+  const secretTrigger = document.getElementById('secretAdminTrigger');
+  if (secretTrigger) {
+    secretTrigger.addEventListener('dblclick', e => {
+      e.preventDefault();
+      auth.currentUser ? openAdmin() : openLoginModal();
+    });
+  }
+});
+</script>
+</body>
+</html>
