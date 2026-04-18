@@ -1087,6 +1087,131 @@ section { padding: 5rem 1.5rem; }
 }
 
 /* ═══════════════════════════════════════════
+   ZAKAT CALCULATOR STYLES
+═══════════════════════════════════════════ */
+.zakat-calculator-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.zakat-form-card, .zakat-result-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(201,168,76,0.15);
+  transition: var(--transition);
+}
+
+.zakat-form-card h3, .zakat-result-card h4 {
+  color: var(--g2);
+  margin-bottom: 1.8rem;
+  font-family: 'Noto Serif Bengali', serif;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid var(--cream2);
+  padding-bottom: 0.8rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+.input-group label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--txt2);
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+.zakat-input {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid var(--cream2);
+  border-radius: 14px;
+  font-family: 'Noto Serif Bengali', sans-serif;
+  font-size: 1rem;
+  background: var(--cream);
+  transition: var(--transition);
+  color: var(--txt);
+  font-weight: 500;
+}
+.zakat-input:focus {
+  border-color: var(--gold);
+  background: var(--white);
+  box-shadow: 0 0 0 5px rgba(201,168,76,0.12);
+  outline: none;
+}
+
+.nisab-check {
+  background: linear-gradient(145deg, #f5efe2, #fdf8f0);
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 1.8rem;
+  border-left: 6px solid var(--gold);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+}
+.nisab-check i { 
+  color: var(--gold); 
+  width: 20px;
+}
+
+.total-wealth {
+  background: linear-gradient(145deg, var(--g1), var(--g2));
+  padding: 1.8rem 1.5rem;
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+  margin-bottom: 1.8rem;
+  box-shadow: inset 0 2px 8px rgba(255,255,255,0.1), 0 8px 20px rgba(13,34,24,0.2);
+  border: 1px solid rgba(201,168,76,0.2);
+}
+.total-wealth .amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Amiri', serif;
+  color: var(--gold2);
+  letter-spacing: 1.5px;
+  line-height: 1.3;
+}
+
+.zakat-amount-box {
+  background: rgba(201,168,76,0.06);
+  padding: 1.8rem 1.5rem;
+  border-radius: 20px;
+  border: 2px dashed var(--gold);
+  text-align: center;
+  backdrop-filter: blur(2px);
+}
+.zakat-amount {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--g3);
+  font-family: 'Amiri', serif;
+  margin: 0.2rem 0 0.3rem;
+  letter-spacing: 2px;
+}
+
+.zakat-eligibility {
+  margin: 1.5rem 0 0.5rem;
+  padding: 0.9rem;
+  border-radius: 60px;
+  text-align: center;
+  font-weight: 600;
+  background: var(--cream);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .zakat-calculator-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .zakat-amount { font-size: 2.8rem; }
+  .total-wealth .amount { font-size: 2rem; }
+     }
+   
+/* ═══════════════════════════════════════════
    FOOTER
 ═══════════════════════════════════════════ */
 footer {
@@ -1638,6 +1763,7 @@ textarea.admin-input { resize: vertical; min-height: 90px; }
     <li><a href="#events">ইভেন্ট</a></li>
     <li><a href="#committee">কমিটি</a></li>
     <li><a href="#gallery">গ্যালারি</a></li>
+    <li><a href="#zakat">🧮 যাকাত ক্যালকুলেটর</a></li>
     <li><a href="#donate">দান</a></li>
   <li><a href="#" class="nav-admin-btn admin-only" id="adminNavBtn" onclick="openLoginModal(); return false;">⚙ অ্যাডমিন</a></li>  
 </ul>
@@ -1650,7 +1776,8 @@ textarea.admin-input { resize: vertical; min-height: 90px; }
   <a href="#notices" onclick="closeMobileMenu()">📌 নোটিশ</a>
   <a href="#events" onclick="closeMobileMenu()">📅 ইভেন্ট</a>
   <a href="#committee" onclick="closeMobileMenu()">👥 কমিটি</a>
-  <a href="#gallery" onclick="closeMobileMenu()">🖼 গ্যালারি</a>
+  <a href="#gallery" onclick="closeMobileMenu()">🖼 গ্যালারি</a >  
+  <a href="#zakat" onclick="closeMobileMenu()">🧮 যাকাত ক্যালকুলেটর</a>
   <a href="#donate" onclick="closeMobileMenu()">💚 দান</a>
  <a href="#" class="admin-only" id="mobileAdminLink" onclick="openLoginModal(); closeMobileMenu(); return false;">⚙ অ্যাডমিন</a>
 </div>
@@ -1870,6 +1997,116 @@ textarea.admin-input { resize: vertical; min-height: 90px; }
     </div>
   </div>
 </section>
+
+
+<!-- ═══════════ ZAKAT CALCULATOR SECTION ═══════════ -->
+<section id="zakat" style="background: var(--cream);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">الزكاة</span>
+      <h2 class="section-title">যাকাত ক্যালকুলেটর</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">হানাফি মাযহাব অনুযায়ী আপনার সম্পদের যাকাতের পরিমাণ নির্ণয় করুন</p>
+    </div>
+
+    <div class="zakat-calculator-grid">
+      <!-- বাম কলাম: ইনপুট ফর্ম -->
+      <div class="zakat-form-card">
+        <h3><i class="fa fa-pencil-square-o" style="color: var(--gold); margin-left: 8px;"></i> সম্পদের বিবরণ</h3>
+        
+        <div class="input-group">
+          <label><i class="fa fa-money"></i> নগদ অর্থ ও ব্যাংক ব্যালেন্স (টাকা)</label>
+          <input type="text" id="zakatCash" class="zakat-input" placeholder="উদাহরণ: ৫০০০০" value="0" inputmode="numeric">
+        </div>
+        
+        <div class="input-group">
+          <label><i class="fa fa-circle" style="color: #d4af37;"></i> স্বর্ণ (গ্রাম)</label>
+          <input type="text" id="zakatGoldGram" class="zakat-input" placeholder="গ্রামে লিখুন" value="0" inputmode="numeric">
+          <label style="margin-top: 10px;">বর্তমান বাজারদর (টাকা/গ্রাম)</label>
+          <input type="text" id="zakatGoldRate" class="zakat-input" value="8500" placeholder="প্রতি গ্রামের দাম" inputmode="numeric">
+          <small style="color: var(--txt2);">বর্তমান আনুমানিক দর: ৮,৫০০ টাকা/গ্রাম</small>
+        </div>
+        
+        <div class="input-group">
+          <label><i class="fa fa-circle-o"></i> রূপা (গ্রাম)</label>
+          <input type="text" id="zakatSilverGram" class="zakat-input" placeholder="গ্রামে লিখুন" value="0" inputmode="numeric">
+          <label style="margin-top: 10px;">বর্তমান বাজারদর (টাকা/গ্রাম)</label>
+          <input type="text" id="zakatSilverRate" class="zakat-input" value="120" placeholder="প্রতি গ্রামের দাম" inputmode="numeric">
+          <small style="color: var(--txt2);">বর্তমান আনুমানিক দর: ১২০ টাকা/গ্রাম</small>
+        </div>
+        
+        <div class="input-group">
+          <label><i class="fa fa-shopping-cart"></i> ব্যবসায়িক পণ্য ও ইনভেন্টরি (টাকা)</label>
+          <input type="text" id="zakatBusiness" class="zakat-input" placeholder="মোট মূল্য" value="0" inputmode="numeric">
+        </div>
+        
+        <div class="input-group">
+          <label><i class="fa fa-handshake-o"></i> অন্যান্য সম্পদ (প্রাপ্য ঋণ, বিনিয়োগ) (টাকা)</label>
+          <input type="text" id="zakatOther" class="zakat-input" placeholder="মোট মূল্য" value="0" inputmode="numeric">
+        </div>
+        
+        <div class="input-group">
+          <label><i class="fa fa-minus-circle"></i> দায়/ঋণ (যা পরিশোধ করতে হবে) (টাকা)</label>
+          <input type="text" id="zakatLiability" class="zakat-input" placeholder="মোট দায়" value="0" inputmode="numeric">
+        </div>
+        
+        <button class="btn-primary" style="width:100%; border-radius:12px;" onclick="calculateZakat()">
+          <i class="fa fa-calculator"></i> হিসাব করুন
+        </button>
+        <p style="font-size:0.8rem; color: var(--txt2); margin-top: 1rem; text-align:center;">
+          ⚡ স্বয়ংক্রিয় হিসাবের জন্য যেকোনো ইনপুট বক্স পরিবর্তন করে এন্টার চাপুন
+        </p>
+      </div>
+      
+      <!-- ডান কলাম: ফলাফল ও সারাংশ -->
+      <div class="zakat-result-card">
+        <div class="nisab-check" id="nisabDisplayBox">
+          <div style="display:flex; justify-content: space-between;">
+            <span><i class="fa fa-balance-scale"></i> নিসাব (স্বর্ণ):</span>
+            <strong id="goldNisabValue">—</strong>
+          </div>
+          <div style="display:flex; justify-content: space-between; margin-top: 5px;">
+            <span><i class="fa fa-balance-scale"></i> নিসাব (রূপা):</span>
+            <strong id="silverNisabValue">—</strong>
+          </div>
+          <div style="font-size:0.8rem; margin-top: 10px; color: #666;">
+            যাকাত ফরজ হওয়ার জন্য নিম্নতর নিসাব প্রযোজ্য।
+          </div>
+        </div>
+        
+        <div class="total-wealth">
+          <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 8px;">মোট যাকাতযোগ্য সম্পদ</h4>
+          <div class="amount" id="totalZakatableWealth">৳ ০</div>
+          <small style="color: rgba(255,255,255,0.6);">(নীট সম্পদ = মোট সম্পদ - দায়)</small>
+        </div>
+        
+        <div class="zakat-amount-box">
+          <h4 style="color: var(--g2);">আপনার প্রদেয় যাকাত (২.৫%)</h4>
+          <div class="zakat-amount" id="zakatPayable">৳ ০</div>
+          <small>চান্দ্র বছর পূর্ণ হলে এই পরিমাণ যাকাত প্রদান করুন</small>
+        </div>
+        
+        <div class="zakat-eligibility" id="eligibilityMessage">
+          <!-- নিসাব পূরণ হলে সবুজ টিক, না হলে লাল ক্রস দেখাবে -->
+          <span id="eligibilityText">তথ্য পূরণ করে হিসাব করুন</span>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 1rem;">
+          <button class="btn-outline" style="flex:1;" onclick="printZakatResult()">
+            <i class="fa fa-print"></i> প্রিন্ট
+          </button>
+          <button class="btn-outline" style="flex:1;" onclick="window.location.href='#donate'">
+            <i class="fa fa-heart"></i> দান করুন
+          </button>
+        </div>
+        <p style="text-align:center; font-size:0.75rem; color: var(--txt2); margin-top: 1rem;">
+          “তোমরা নামাজ কায়েম করো ও যাকাত দাও” (সূরা বাকারা: ৪৩)
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer>
@@ -2574,6 +2811,148 @@ function submitDonation() {
     document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
   }).catch(() => showToast('সংরক্ষণ ব্যর্থ হয়েছে', 'error'));
 }
+
+
+/* ══════════════════════════════════════════
+   ZAKAT CALCULATOR FUNCTIONS
+══════════════════════════════════════════ */
+
+// ইউটিলিটি: বাংলা/ইংরেজি সংখ্যা স্বাভাবিক করা
+function normalizeNumberInput(val) {
+  if (!val) return 0;
+  const str = String(val);
+  const map = {
+    '০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9',
+    '०':'0','१':'1','२':'2','३':'3','४':'4','५':'5','६':'6','७':'7','८':'8','९':'9'
+  };
+  const normalized = str.replace(/[০-৯०-९]/g, d => map[d] || d);
+  return parseFloat(normalized.replace(/,/g, '')) || 0;
+}
+
+// প্রধান ক্যালকুলেশন ফাংশন
+function calculateZakat() {
+  // ইনপুট সংগ্রহ ও সংখ্যায় রূপান্তর
+  const cash = normalizeNumberInput(document.getElementById('zakatCash').value);
+  const goldGram = normalizeNumberInput(document.getElementById('zakatGoldGram').value);
+  const goldRate = normalizeNumberInput(document.getElementById('zakatGoldRate').value);
+  const silverGram = normalizeNumberInput(document.getElementById('zakatSilverGram').value);
+  const silverRate = normalizeNumberInput(document.getElementById('zakatSilverRate').value);
+  const business = normalizeNumberInput(document.getElementById('zakatBusiness').value);
+  const other = normalizeNumberInput(document.getElementById('zakatOther').value);
+  const liability = normalizeNumberInput(document.getElementById('zakatLiability').value);
+
+  // সম্পদের মূল্যয়ন
+  const goldValue = goldGram * goldRate;
+  const silverValue = silverGram * silverRate;
+  
+  // মোট সম্পদ ও নীট সম্পদ
+  const totalAssets = cash + goldValue + silverValue + business + other;
+  const netWealth = totalAssets - liability;
+  
+  // নিসাব নির্ধারণ (স্বর্ণ ৮৭.৪৮ গ্রাম, রূপা ৬১২.৩৬ গ্রাম)
+  const goldNisab = 87.48 * goldRate;
+  const silverNisab = 612.36 * silverRate;
+  const nisabThreshold = Math.min(goldNisab, silverNisab);
+  
+  // UI আপডেট
+  document.getElementById('goldNisabValue').innerText = '৳ ' + Math.round(goldNisab).toLocaleString('bn-IN');
+  document.getElementById('silverNisabValue').innerText = '৳ ' + Math.round(silverNisab).toLocaleString('bn-IN');
+  
+  const wealthSpan = document.getElementById('totalZakatableWealth');
+  const zakatSpan = document.getElementById('zakatPayable');
+  const eligibilityDiv = document.getElementById('eligibilityMessage');
+  const eligibilityText = document.getElementById('eligibilityText');
+  
+  wealthSpan.innerText = '৳ ' + Math.round(netWealth).toLocaleString('bn-IN');
+  
+  if (netWealth >= nisabThreshold) {
+    const zakat = netWealth * 0.025;
+    zakatSpan.innerText = '৳ ' + Math.round(zakat).toLocaleString('bn-IN');
+    eligibilityDiv.style.background = '#e8f5e9';
+    eligibilityDiv.style.color = '#2e7d32';
+    eligibilityText.innerHTML = '<i class="fa fa-check-circle"></i> আলহামদুলিল্লাহ, আপনার উপর যাকাত ফরজ হয়েছে।';
+    document.querySelector('.nisab-check').style.background = '#e8f5e9';
+  } else {
+    zakatSpan.innerText = '৳ ০';
+    eligibilityDiv.style.background = '#ffebee';
+    eligibilityDiv.style.color = '#c0392b';
+    eligibilityText.innerHTML = '<i class="fa fa-exclamation-circle"></i> আপনার সম্পদ নিসাব পরিমাণে পৌঁছায়নি। যাকাত ফরজ নয়।';
+    document.querySelector('.nisab-check').style.background = '#ffebee';
+  }
+}
+
+// প্রিন্ট ফাংশন
+function printZakatResult() {
+  // ইনপুট ফিল্ডের মান আপডেট করে প্রিন্ট ট্রিগার করার আগে ক্যালকুলেশন নিশ্চিত করা
+  calculateZakat();
+  
+  const printWindow = window.open('', '_blank', 'width=600,height=700');
+  const netWealth = document.getElementById('totalZakatableWealth').innerText;
+  const zakatAmount = document.getElementById('zakatPayable').innerText;
+  const eligibility = document.getElementById('eligibilityText').innerText;
+  const goldNisab = document.getElementById('goldNisabValue').innerText;
+  const silverNisab = document.getElementById('silverNisabValue').innerText;
+  
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>যাকাত হিসাব সনদ - শেখ বাড়ি জামে মসজিদ</title>
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+      <style>
+        body { font-family: 'Noto Serif Bengali', serif; background: #fdf8f0; padding: 2rem; color: #1c1c1c; }
+        .cert { max-width: 500px; margin: 0 auto; background: white; padding: 2.5rem; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 2px solid #c9a84c; }
+        h2 { color: #0d2218; text-align: center; border-bottom: 2px solid #c9a84c; padding-bottom: 1rem; }
+        .logo { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; }
+        .amount { font-size: 3rem; color: #2d5a3d; font-weight: 800; font-family: 'Amiri'; text-align: center; margin: 1rem 0; }
+        .info { background: #f0e8d5; padding: 1.5rem; border-radius: 16px; margin: 1.5rem 0; }
+        .footer { margin-top: 2rem; text-align: center; color: #666; font-size: 0.9rem; border-top: 1px dashed #ccc; padding-top: 1.5rem; }
+        .btn-print { display: block; margin: 1rem auto; background: #c9a84c; color: #0d2218; border: none; padding: 0.8rem 2rem; border-radius: 40px; font-weight: bold; cursor: pointer; }
+        @media print { .btn-print { display: none; } }
+      </style>
+    </head>
+    <body>
+      <div class="cert">
+        <div class="logo">🕌</div>
+        <h2>যাকাত হিসাব সনদ</h2>
+        <p style="text-align:center;">শেখ বাড়ি জামে মসজিদ, ফলদা ঘোনা পাড়া, ভূয়াপুর</p>
+        <div class="info">
+          <p><strong>নিসাব (স্বর্ণ):</strong> ${goldNisab}</p>
+          <p><strong>নিসাব (রূপা):</strong> ${silverNisab}</p>
+          <p><strong>মোট যাকাতযোগ্য সম্পদ:</strong> ${netWealth}</p>
+          <p style="margin-top:1rem; background: #e8f5e9; padding: 0.8rem; border-radius: 30px; text-align:center;">${eligibility}</p>
+        </div>
+        <div class="amount">${zakatAmount}</div>
+        <p style="text-align:center; font-weight:600;">আপনার প্রদেয় যাকাতের পরিমাণ</p>
+        <div class="footer">
+          তারিখ: ${new Date().toLocaleDateString('bn-BD')}<br>
+          “যারা যাকাত দান করে, তাদের জন্য তাদের রবের কাছে পুরস্কার রয়েছে” (সূরা বাকারা: ২৭৭)
+        </div>
+        <button class="btn-print" onclick="window.print()">🖨️ প্রিন্ট করুন</button>
+      </div>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+// ইভেন্ট লিসেনার: এন্টার প্রেসে হিসাব
+document.addEventListener('DOMContentLoaded', function() {
+  const inputs = document.querySelectorAll('.zakat-input');
+  inputs.forEach(input => {
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        calculateZakat();
+      }
+    });
+    input.addEventListener('blur', calculateZakat); // ফোকাস হারালেও আপডেট
+  });
+  
+  // প্রাথমিক ক্যালকুলেশন
+  setTimeout(calculateZakat, 500);
+});
+
 
 /* ══════════════════════════════════════════
    AUTH
