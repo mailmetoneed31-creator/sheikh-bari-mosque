@@ -2884,7 +2884,7 @@ function calculateZakat() {
 // প্রিন্ট ফাংশন
 
           
-          function printZakatResult() {
+         function printZakatResult() {
   // সর্বশেষ ক্যালকুলেশন নিশ্চিত করা
   calculateZakat();
 
@@ -2904,7 +2904,7 @@ function calculateZakat() {
   const mosqueLogoUrl = 'https://i.postimg.cc/sXxZ5mp9/file-00000000eab471fab770c71aec79b79a.png';
 
   // প্রিন্ট উইন্ডো তৈরি
-  const printWindow = window.open('', '_blank', 'width=750,height=950');
+  const printWindow = window.open('', '_blank', 'width=800,height=1000');
   
   printWindow.document.write(`
     <!DOCTYPE html>
@@ -2914,10 +2914,10 @@ function calculateZakat() {
       <title>যাকাত সনদ - শেখ বাড়ি জামে মসজিদ</title>
       <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
       <style>
-        /* প্রিন্ট সেটআপ - এক পেজ গ্যারান্টি */
+        /* প্রিন্ট সেটআপ - ফুল পেজ ইউটিলাইজেশন */
         @page {
           size: A4;
-          margin: 0.8cm;
+          margin: 0.4cm;  /* কম মার্জিন = বেশি জায়গা */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
@@ -2930,18 +2930,18 @@ function calculateZakat() {
           justify-content: center;
           align-items: center;
           font-family: 'Noto Serif Bengali', serif;
-          padding: 10px;
+          padding: 8px;
           margin: 0;
           min-height: 100vh;
         }
         .certificate {
-          max-width: 700px;
+          max-width: 760px;  /* একটু চওড়া */
           width: 100%;
           margin: 0 auto;
           background: #fefcf7;
-          padding: 16px 20px;
-          border-radius: 20px;
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), inset 0 0 0 2px #d4af37;
+          padding: 24px 28px;  /* প্যাডিং বাড়ানো */
+          border-radius: 24px;
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12), inset 0 0 0 2px #d4af37;
           border: 6px double #b49450;
           position: relative;
           overflow: hidden;
@@ -2958,14 +2958,14 @@ function calculateZakat() {
           justify-content: center;
           pointer-events: none;
           z-index: 1;
-          transform: rotate(-25deg) scale(1);
-          opacity: 0.05;
-          font-size: 80px;
+          transform: rotate(-25deg) scale(1.1);
+          opacity: 0.045;
+          font-size: 100px;  /* বড় জলছাপ */
           font-weight: 800;
           color: #1a3a2a;
           white-space: nowrap;
           font-family: 'Noto Serif Bengali', serif;
-          letter-spacing: 12px;
+          letter-spacing: 16px;
         }
         .content {
           position: relative;
@@ -2975,18 +2975,18 @@ function calculateZakat() {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 12px;
-          margin-bottom: 8px;
-          border-bottom: 1px dashed #d4af37;
-          padding-bottom: 8px;
+          gap: 18px;
+          margin-bottom: 14px;
+          border-bottom: 2px dashed #d4af37;
+          padding-bottom: 14px;
         }
         .logo-box {
-          width: 50px;
-          height: 50px;
+          width: 75px;   /* লোগো বড় */
+          height: 75px;
           border-radius: 50%;
           overflow: hidden;
-          border: 2px solid #d4af37;
-          box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+          border: 3px solid #d4af37;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.12);
           background: #1a3a2a;
           flex-shrink: 0;
         }
@@ -3000,115 +3000,114 @@ function calculateZakat() {
           text-align: left;
         }
         .mosque-name {
-          font-size: 20px;
+          font-size: 28px;  /* বড় নাম */
           font-weight: 800;
           color: #0d2218;
-          letter-spacing: 1px;
-          line-height: 1.1;
+          letter-spacing: 1.5px;
+          line-height: 1.2;
         }
         .mosque-address {
-          font-size: 10px;
+          font-size: 13px;  /* বড় ঠিকানা */
           color: #5a5a5a;
           font-weight: 500;
-          margin-top: 2px;
+          margin-top: 4px;
         }
         .cert-title {
           text-align: center;
-          margin: 8px 0 10px;
+          margin: 18px 0 20px;
         }
         .cert-title h2 {
-          font-size: 26px;
+          font-size: 36px;  /* বড় টাইটেল */
           font-weight: 700;
           color: #1e3b2a;
           display: inline-block;
-          padding: 4px 20px;
-          border-radius: 40px;
+          padding: 8px 32px;
+          border-radius: 50px;
           background: linear-gradient(135deg, #f3ede3, #fff8ed);
-          box-shadow: inset 0 1px 2px rgba(0,0,0,0.03), 0 3px 6px rgba(212,175,55,0.1);
-          border: 1px solid #d4af37;
-          letter-spacing: 1.5px;
+          box-shadow: inset 0 1px 3px rgba(0,0,0,0.03), 0 5px 10px rgba(212,175,55,0.12);
+          border: 2px solid #d4af37;
+          letter-spacing: 2px;
         }
         .info-panel {
           background: #faf5ec;
-          border-radius: 12px;
-          padding: 10px 14px;
-          margin-bottom: 10px;
+          border-radius: 16px;
+          padding: 16px 20px;
+          margin-bottom: 16px;
           border: 1px solid #e2d3b8;
         }
         .info-row {
           display: flex;
           justify-content: space-between;
           align-items: baseline;
-          padding: 5px 0;
+          padding: 8px 0;
           border-bottom: 1px dashed #c9b48b;
-          font-size: 13px;
+          font-size: 16px;  /* বড় ফন্ট */
         }
         .info-row:last-child { border-bottom: none; }
         .label {
-          font-weight: 600;
+          font-weight: 700;
           color: #2d4a3e;
-          font-size: 12px;
+          font-size: 15px;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 8px;
         }
         .value {
           font-weight: 700;
           color: #0d2218;
-          font-size: 14px;
+          font-size: 18px;
           font-family: 'Amiri', serif;
         }
         .eligibility-badge {
           background: #e8f5e9;
-          border-radius: 25px;
-          padding: 6px 10px;
+          border-radius: 40px;
+          padding: 12px 16px;
           text-align: center;
-          margin: 8px 0 8px;
-          border-left: 5px solid #2e7d32;
-          font-weight: 600;
+          margin: 18px 0 16px;
+          border-left: 8px solid #2e7d32;
+          font-weight: 700;
           color: #1b5e20;
-          font-size: 12px;
+          font-size: 16px;
         }
         .zakat-display {
           text-align: center;
-          margin: 10px 0 8px;
+          margin: 20px 0 16px;
         }
         .zakat-label {
-          font-size: 13px;
+          font-size: 18px;
           color: #5a4a3a;
-          margin-bottom: 4px;
-          font-weight: 500;
+          margin-bottom: 8px;
+          font-weight: 600;
         }
-        /* ✅ সলিড কালার - প্রিন্টে দৃশ্যমান */
         .zakat-amount {
-          font-size: 42px;
+          font-size: 56px;  /* অনেক বড় অংক */
           font-weight: 800;
           color: #1a3a2a;
           background: #fdf8f0;
           font-family: 'Amiri', serif;
           line-height: 1.2;
-          letter-spacing: 2px;
-          border: 2px solid #d4af37;
+          letter-spacing: 3px;
+          border: 3px solid #d4af37;
           display: inline-block;
-          padding: 4px 30px;
-          border-radius: 50px;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+          padding: 8px 45px;
+          border-radius: 60px;
+          box-shadow: 0 6px 12px rgba(0,0,0,0.06);
         }
         /* ব্যক্তিগত তথ্য */
         .personal-info {
-          margin: 10px 0 8px;
-          border: 2px solid #d4af37;
-          border-radius: 12px;
-          padding: 12px 16px;
+          margin: 20px 0 16px;
+          border: 3px solid #d4af37;
+          border-radius: 18px;
+          padding: 20px 24px;
           background: #fdfbf7;
         }
         .personal-field {
           display: flex;
           align-items: baseline;
-          margin-bottom: 8px;
+          margin-bottom: 14px;
           border-bottom: 1px dashed #c9b48b;
-          padding-bottom: 6px;
-          font-size: 13px;
+          padding-bottom: 10px;
+          font-size: 16px;
         }
         .personal-field:last-child {
           margin-bottom: 0;
@@ -3116,92 +3115,91 @@ function calculateZakat() {
           padding-bottom: 0;
         }
         .field-label {
-          width: 70px;
+          width: 90px;
           font-weight: 700;
           color: #1e3b2a;
-          font-size: 13px;
+          font-size: 17px;
         }
         .field-value {
           flex: 1;
-          font-size: 13px;
+          font-size: 16px;
           color: #333;
           border-bottom: 2px dotted #555;
-          min-height: 20px;
-          margin-left: 10px;
-          padding: 0 4px;
+          min-height: 28px;
+          margin-left: 15px;
+          padding: 0 6px;
         }
         .footer {
-          margin-top: 8px;
+          margin-top: 20px;
           display: flex;
           justify-content: space-between;
           align-items: flex-end;
           border-top: 2px dotted #d4af37;
-          padding-top: 8px;
-          font-size: 12px;
+          padding-top: 16px;
+          font-size: 15px;
         }
         .signature-area {
           text-align: left;
         }
         .signature-line {
-          margin-top: 14px;
-          font-weight: 600;
+          margin-top: 22px;
+          font-weight: 700;
           border-top: 2px solid #2d5a3d;
           display: inline-block;
-          padding-top: 2px;
-          min-width: 110px;
-          font-size: 11px;
+          padding-top: 5px;
+          min-width: 150px;
+          font-size: 14px;
         }
         .stamp {
           text-align: right;
         }
         .stamp-circle {
-          border: 3px solid #b49450;
+          border: 4px solid #b49450;
           border-radius: 50%;
-          width: 55px;
-          height: 55px;
+          width: 75px;
+          height: 75px;
           display: flex;
           align-items: center;
           justify-content: center;
           color: #8b6f3c;
           font-weight: 700;
-          font-size: 10px;
+          font-size: 13px;
           transform: rotate(-5deg);
-          box-shadow: inset 0 0 5px rgba(180,148,80,0.2);
+          box-shadow: inset 0 0 8px rgba(180,148,80,0.2);
           background: rgba(212,175,55,0.03);
-          line-height: 1.2;
+          line-height: 1.3;
         }
         .verse {
           text-align: center;
-          margin-top: 8px;
+          margin-top: 20px;
           font-style: italic;
           color: #4a4a4a;
           background: #f3ede3;
-          padding: 6px 10px;
-          border-radius: 25px;
-          font-size: 10px;
+          padding: 10px 14px;
+          border-radius: 30px;
+          font-size: 13px;
           border: 1px solid #e2d3b8;
-          line-height: 1.3;
         }
         .print-btn {
           text-align: center;
-          margin-top: 10px;
+          margin-top: 20px;
         }
         .print-btn button {
           background: #1a3a2a;
           border: none;
-          padding: 8px 25px;
-          border-radius: 40px;
+          padding: 12px 35px;
+          border-radius: 50px;
           font-family: 'Noto Serif Bengali', sans-serif;
           font-weight: 700;
-          font-size: 13px;
+          font-size: 16px;
           color: #d4af37;
           cursor: pointer;
-          box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
           border: 1px solid #d4af37;
           transition: 0.2s;
         }
 
-        /* 🔥 A4 Single Page + সেন্টারিং গ্যারান্টি */
+        /* 🔥 A4 Single Page + পূর্ণাঙ্গ সেন্টারিং */
         @media print {
           html, body {
             width: 100% !important;
@@ -3220,31 +3218,30 @@ function calculateZakat() {
           }
           .certificate {
             box-shadow: none;
-            border: 4px double #b49450;
-            padding: 14px 18px !important;
-            margin: 0 !important;  /* অটো মার্জিন সরিয়ে ফ্লেক্স সেন্টারিং ব্যবহার */
+            border: 6px double #b49450;
+            padding: 20px 24px !important;
+            margin: 0 !important;
             page-break-inside: avoid;
             break-inside: avoid;
             max-width: 100%;
-            border-radius: 15px;
+            border-radius: 20px;
           }
           .print-btn {
             display: none !important;
           }
           .watermark {
-            opacity: 0.06;
+            opacity: 0.05;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
           .field-value {
             border-bottom: 2px dotted #000 !important;
           }
-          /* ✅ প্রিন্টে টাকার অংক সলিড কালো */
           .zakat-amount {
             color: #1a3a2a !important;
             background: #fdf8f0 !important;
-            border: 2px solid #d4af37 !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+            border: 3px solid #d4af37 !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05) !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
@@ -3258,7 +3255,7 @@ function calculateZakat() {
             break-inside: avoid;
           }
           @page {
-            margin: 0.8cm; /* পৃষ্ঠার চারপাশে সমান ফাঁকা */
+            margin: 0.4cm;  /* কম মার্জিন = ফুল পেজ ইউটিলাইজ */
           }
         }
       </style>
@@ -3328,8 +3325,8 @@ function calculateZakat() {
           <div class="footer">
             <div class="signature-area">
               <div>তারিখ: ${banglaDate}</div>
-              <div class="signature-line"> ইমাম </div>
-              <div style="font-size: 10px; color: #777; margin-top: 2px;">শেখ বাড়ি জামে মসজিদ </div>
+              <div class="signature-line">সভাপতি / সম্পাদক</div>
+              <div style="font-size: 13px; color: #777; margin-top: 5px;">শেখ বাড়ি জামে মসজিদ কমিটি</div>
             </div>
             <div class="stamp">
               <div class="stamp-circle">
@@ -3351,7 +3348,12 @@ function calculateZakat() {
     </html>
   `);
   printWindow.document.close();
-                 }
+   } 
+        
+          
+          
+          
+            
         
         
 
